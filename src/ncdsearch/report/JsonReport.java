@@ -17,7 +17,7 @@ public class JsonReport implements IReport {
 	private boolean fragmentsGenerated = false;
 	private JsonGenerator gen;
 	private SearchConfiguration config;
-	
+
 	public JsonReport(SearchConfiguration config, OutputStream w) throws IOException {
 	    this.config = config;
 		JsonFactory factory = new JsonFactory();
@@ -25,12 +25,12 @@ public class JsonReport implements IReport {
 	    gen.useDefaultPrettyPrinter();
 	    gen.writeStartObject();
 	}
-	
+
 	@Override
 	public void writeConfig(String attrName, String attrValue) throws IOException {
 		gen.writeStringField(attrName, attrValue);
 	}
-	
+
 	@Override
 	public void write(List<Fragment> fragments) throws IOException {
 		if (!fragmentsGenerated) {
@@ -44,14 +44,15 @@ public class JsonReport implements IReport {
 			gen.writeNumberField("EndLine", fragment.getEndLine());
 			gen.writeNumberField("Distance", fragment.getDistance());
 			if (config.reportPositionDetail()) {
+				gen.writeStringField("DirName", fragment.getFilename().substring(0,fragment.getFilename().lastIndexOf("\\")));
 				gen.writeNumberField("StartChar", fragment.getStartCharPositionInLine());
 				gen.writeNumberField("EndChar", fragment.getEndCharPositionInLine());
-				gen.writeStringField("Tokens", fragment.getTokenString());
+				gen.writeStringField("Tokens", fragment.getTokenString().replaceAll(" ", ""));
 			}
 			gen.writeEndObject();
 		}
 	}
-	
+
 	@Override
 	public void close() throws IOException {
 		if (fragmentsGenerated) {
