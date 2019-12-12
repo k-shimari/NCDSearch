@@ -91,7 +91,5 @@ public class Clusters {
 			c = new Shortest(topN, allNode, distanceAlgorithm);
 		}
 		clusterContents = c.clustering();
-
 	}
-
 }

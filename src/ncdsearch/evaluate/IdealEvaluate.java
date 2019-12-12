@@ -1,6 +1,8 @@
 package ncdsearch.evaluate;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -8,7 +10,7 @@ import ncdsearch.clustering.Answers;
 import ncdsearch.clustering.Clusters;
 import ncdsearch.clustering.JsonNodesInfo;
 
-public class IdealEvaluate extends Evaluate{
+public class IdealEvaluate extends Evaluate {
 	public IdealEvaluate(int topN) {
 		super(topN);
 		// TODO 自動生成されたコンストラクター・スタブ
@@ -37,7 +39,9 @@ public class IdealEvaluate extends Evaluate{
 
 	public Clusters getIdealClusters(Clusters cs, Answers a) {
 		Clusters ics = new Clusters();
+		Set<List<JsonNode>> set = new HashSet<>();
 		for (List<JsonNode> nodes : cs.getRepJsonMap().values()) {
+			if (set.contains(nodes)) continue;
 			List<JsonNode> sortedNodes = JsonNodesInfo.getSortedListbyDistance(nodes);
 			if (isContainInAnswer(nodes, a.getAllNode())) {
 				ics.addClusterReps(sortedNodes);
@@ -46,8 +50,9 @@ public class IdealEvaluate extends Evaluate{
 					ics.putRepJsonMap(node, cs.getRepJsonMap().get(node));
 				}
 			} else {
-				nonAnswerRepSize += topN;
+				nonAnswerRepSize += Math.min(topN, nodes.size());
 			}
+			set.add(nodes);
 		}
 		return ics;
 	}

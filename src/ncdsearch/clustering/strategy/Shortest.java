@@ -14,6 +14,7 @@ public class Shortest extends Clustering {
 	private TIntDoubleHashMap minDistanceMap;
 	private TIntObjectHashMap<Cluster> clusterMap;
 
+	private static final int CLUSTERNUM = 10;
 	private int totalVertexNumber;
 	private boolean[] removedFlagMap;
 
@@ -42,7 +43,7 @@ public class Shortest extends Clustering {
 		int mapSize = totalVertexNumber;
 		System.err.println("initial clusters : " + mapSize);
 		int idx = 0;
-		while (mapSize > 5) {
+		while (mapSize > CLUSTERNUM) {
 			idx++;
 			update();
 			int count = 0;
