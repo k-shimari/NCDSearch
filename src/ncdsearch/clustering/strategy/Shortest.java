@@ -14,15 +14,13 @@ public class Shortest extends Clustering {
 	private TIntDoubleHashMap minDistanceMap;
 	private TIntObjectHashMap<Cluster> clusterMap;
 
-	private static final int CLUSTERNUM = 10;
+	private static final int CLUSTERNUM = 20;
 	private int totalVertexNumber;
 	private boolean[] removedFlagMap;
 
 	public Shortest(int topN, List<JsonNode> allNode, String strategy) {
 		super(topN, allNode, strategy);
 		totalVertexNumber = 0;
-		//assign allnode to fragment
-
 	}
 
 	@Override

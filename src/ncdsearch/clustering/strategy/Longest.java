@@ -1,15 +1,15 @@
 package ncdsearch.clustering.strategy;
 
-import java.awt.Component;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import gnu.trove.map.hash.TIntDoubleHashMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
-import ncdsearch_clustering.old_strategy.IClusteringStrategy;
 
-public class Longest implements IClusteringStrategy {
+public class Longest extends Clustering {
 	private TIntObjectHashMap<TIntDoubleHashMap> distanceMap;
 	private TIntDoubleHashMap minDistanceMap;
 	private TIntObjectHashMap<Cluster> clusterMap;
@@ -17,20 +17,26 @@ public class Longest implements IClusteringStrategy {
 	private boolean[] removedFlagMap;
 	//	private boolean[][] removedEdgeFlagMap;
 
-	public Longest() {
+	public Longest(int topN, List<JsonNode> allNode, String strategy) {
+		super(topN, allNode, strategy);
 		totalVertexNumber = 0;
 	}
 
 	@Override
-	public List<Cluster> clustering(List<Component> fragments) {
+	public List<List<JsonNode>> clustering() {
 		distanceMap = new TIntObjectHashMap<>();
 		minDistanceMap = new TIntDoubleHashMap();
 		clusterMap = new TIntObjectHashMap<>();
 
-		totalVertexNumber = fragments.size();
+		totalVertexNumber = allNode.size();
 		removedFlagMap = new boolean[totalVertexNumber];
 		Arrays.fill(removedFlagMap, false);
-		createInitialClusters(fragments);
+
+		List<Component> components = new ArrayList<>();
+		for (JsonNode node : allNode) {
+			components.add(new Component(node, strategy));
+		}
+		createInitialClusters(components);
 		int mapSize = totalVertexNumber;
 		System.err.println("initial clusters : " + mapSize);
 		int idx = 0;
@@ -48,15 +54,19 @@ public class Longest implements IClusteringStrategy {
 		}
 
 		System.err.println("iterate count : " + idx);
-		List<Cluster> finalCluster = new ArrayList<>();
-
+		List<List<JsonNode>> nodeList = new ArrayList<>();
 		for (int i = 0; i < totalVertexNumber; i++) {
 			if (!removedFlagMap[i]) {
-				finalCluster.add(clusterMap.get(i));
+				Cluster c = clusterMap.get(i);
+				List<JsonNode> list = new ArrayList<>();
+				for (Component co : c.getComponents()) {
+					list.add(co.getJsonNode());
+				}
+				nodeList.add(list);
+
 			}
 		}
-
-		return finalCluster;
+		return nodeList;
 	}
 
 	private List<Cluster> createInitialClusters(List<Component> fragments) {
