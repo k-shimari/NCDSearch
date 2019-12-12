@@ -5,13 +5,13 @@ import ncdsearch.ICodeDistanceStrategy;
 import ncdsearch.TokenSequence;
 
 /**
- * Byte-level, normalized distance based on longest common subsequence. 
+ * Byte-level, normalized distance based on longest common subsequence.
  * Its token version has been used by Yoshimura et al. IWSC 2012 and Kanda et al. SPLC 2013 papers.
  */
 public class ByteLCSDistance implements ICodeDistanceStrategy {
 
 	private byte[] query;
-	
+
 	public ByteLCSDistance(TokenSequence query) {
 		this.query = query.toByteArray();
 	}
@@ -40,9 +40,9 @@ public class ByteLCSDistance implements ICodeDistanceStrategy {
 	    }
 	    return maxScore;
 	}
-	
+
 	@Override
 	public void close() {
-		// This object has no system resource. 
+		// This object has no system resource.
 	}
 }

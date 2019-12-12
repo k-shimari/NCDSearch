@@ -7,7 +7,7 @@ import ncdsearch.TokenSequence;
 public class NormalizedByteLevenshteinDistance implements ICodeDistanceStrategy {
 
 	private byte[] query;
-	
+
 	public NormalizedByteLevenshteinDistance(TokenSequence query) {
 		this.query = query.toByteArray();
 	}
@@ -18,11 +18,11 @@ public class NormalizedByteLevenshteinDistance implements ICodeDistanceStrategy 
 	    return computeLevenshteinDistance(query, another) * 1.0 / Math.max(query.length, another.length);
 	}
 
-	static int computeLevenshteinDistance(byte[] query, byte[] another) { 
+	static int computeLevenshteinDistance(byte[] query, byte[] another) {
 		int[][] score = computeLevenshteinDistanceTable(query, another);
 	    return score[query.length][another.length];
 	}
-	
+
 	static int[][] computeLevenshteinDistanceTable(byte[] query, byte[] another) {
 		int[][] score = new int[query.length+1][another.length+1];
 		for (int i=0; i<query.length+1; i++) {
@@ -33,7 +33,7 @@ public class NormalizedByteLevenshteinDistance implements ICodeDistanceStrategy 
 		}
 	    for (int i=1; i<query.length+1; i++) {
 	    	for (int j=1; j<another.length+1; j++) {
-	    		int edit = (query[i-1] == another[j-1]) ? 0 : 1; 
+	    		int edit = (query[i-1] == another[j-1]) ? 0 : 1;
 	    		int s1 = Math.min(score[i-1][j]+1, score[i][j-1]+1);
 	    		int s2 = Math.min(s1, score[i-1][j-1]+edit);
 	    		score[i][j] = s2;
@@ -41,9 +41,9 @@ public class NormalizedByteLevenshteinDistance implements ICodeDistanceStrategy 
 	    }
 	    return score;
 	}
-	
+
 	@Override
 	public void close() {
-		// This object has no system resource. 
+		// This object has no system resource.
 	}
 }
