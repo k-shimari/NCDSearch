@@ -1,5 +1,6 @@
 package ncdsearch.experimental;
 
+import java.io.IOException;
 import java.util.HashSet;
 
 import ncdsearch.ICodeDistanceStrategy;
@@ -7,32 +8,32 @@ import ncdsearch.IVariableWindowStrategy;
 import ncdsearch.TokenSequence;
 
 public class LZJDistance implements IVariableWindowStrategy {
-	
+
 	private HashSet<ByteArrayFragment> querySet;
 	private boolean strict;
 	private int bestWindowSize;
-	
+
 	private ICodeDistanceStrategy secondary;
-	
+
 	private class ByteArrayFragment {
-		
+
 		private byte[] buf;
 		private int start;
 		private int length;
 		private int hash;
-		
+
 		public ByteArrayFragment(byte[] buf, int start, int length) {
 			this.buf = buf;
 			this.start = start;
 			this.length = length;
 			this.hash = MurmurHash3.murmurhash3_x86_32(buf, start, length, 0);
 		}
-		
+
 		@Override
 		public int hashCode() {
 			return hash;
 		}
-		
+
 		@Override
 		public boolean equals(Object obj) {
 			if (obj != null && obj instanceof ByteArrayFragment) {
@@ -52,7 +53,7 @@ public class LZJDistance implements IVariableWindowStrategy {
 			}
 			return false;
 		}
-		
+
 		/**
 		 * A string representation of the byte sub-sequence.
 		 * This may return a broken sub-string for multibyte text.
@@ -62,7 +63,7 @@ public class LZJDistance implements IVariableWindowStrategy {
 			return new String(buf, start, length);
 		}
 	}
-	
+
 	public static void main(String[] args) {
 		for (String arg: args) {
 			LZJDistance d = new LZJDistance(true);
@@ -82,7 +83,7 @@ public class LZJDistance implements IVariableWindowStrategy {
 	public LZJDistance(TokenSequence query) {
 		this(query, false);
 	}
-	
+
 	public LZJDistance(TokenSequence query, boolean strict) {
 		this.strict = strict;
 		byte[] queryBytes = query.toByteArray();
@@ -92,7 +93,7 @@ public class LZJDistance implements IVariableWindowStrategy {
 	public void setSecondaryDistance(ICodeDistanceStrategy strategy) {
 		this.secondary = strategy;
 	}
-	
+
 	/**
 	 * For testing purpose
 	 * @param strict
@@ -101,7 +102,7 @@ public class LZJDistance implements IVariableWindowStrategy {
 		this.querySet = new HashSet<>();
 		this.strict = strict;
 	}
-	
+
 	private HashSet<ByteArrayFragment> toLZSet(byte[] b) {
 		HashSet<ByteArrayFragment> s = new HashSet<>();
 		int start = 0;
@@ -118,9 +119,9 @@ public class LZJDistance implements IVariableWindowStrategy {
 	}
 
 	/**
-	 * 
+	 *
 	 * Find the best LZJD value and its window size
-	 * @param code specifies an entire file 
+	 * @param code specifies an entire file
 	 * @param startPos specifies the first token index of LZSets
 	 * @param maxEndPos specifies the last token index of the search
 	 * @return
@@ -131,11 +132,11 @@ public class LZJDistance implements IVariableWindowStrategy {
 
 		double bestLZJD = Double.MAX_VALUE;
 		bestWindowSize = 0;
-		
+
 		int firstTokenPos = code.getBytePosition(startPos);
 
 		byte[] buf = code.toByteArray();
-		
+
 		int byteCount = code.getBytePosition(endPos) - firstTokenPos;
 		HashSet<ByteArrayFragment> s = new HashSet<>(2 * byteCount);
 
@@ -144,11 +145,11 @@ public class LZJDistance implements IVariableWindowStrategy {
 		int start = 0;
 		int end = 1;
 		int intersection = 0;
-		
+
 		int windowSize = endPos-startPos;
-		// For each token position, update LZSet and LZJD 
+		// For each token position, update LZSet and LZJD
 		for (int t=0; t<windowSize; t++) {
-			
+
 			int nextEnd = code.getBytePosition(startPos+t+1)-firstTokenPos;
 			while (end <= nextEnd) {
 				ByteArrayFragment text = new ByteArrayFragment(buf, firstTokenPos + start, end - start);
@@ -161,7 +162,7 @@ public class LZJDistance implements IVariableWindowStrategy {
 				}
 				end++;
 			}
-			
+
 			int unionSize = querySet.size() + s.size() - intersection;
 			double lzjd = (unionSize - intersection) * 1.0 / unionSize;
 			if (lzjd < bestLZJD) {
@@ -169,7 +170,7 @@ public class LZJDistance implements IVariableWindowStrategy {
 				bestWindowSize = t;
 			}
 
-			// Terminate the loop early, if no chance 
+			// Terminate the loop early, if no chance
 			int unmatched = s.size() - intersection;
 			if (unmatched > allowedMaxUnmatched) {
 				break;
@@ -182,12 +183,12 @@ public class LZJDistance implements IVariableWindowStrategy {
 			return bestLZJD;
 		}
 	}
-	
+
 	public int getBestWindowSize() {
 		return bestWindowSize;
 	}
-	
-	
+
+
 	@Override
 	public double computeDistance(TokenSequence code) {
 		HashSet<ByteArrayFragment> codeSet = toLZSet(code.toByteArray());
@@ -198,12 +199,25 @@ public class LZJDistance implements IVariableWindowStrategy {
 		double lzjd = (unionSize - intersectionSize) * 1.0 / unionSize;
 		return lzjd;
 	}
-	
+
+	@Override
+	public double computeDistance(TokenSequence code, TokenSequence code2) {
+		HashSet<ByteArrayFragment> codeSet = toLZSet(code.toByteArray());
+		HashSet<ByteArrayFragment> codeSet2 = toLZSet(code2.toByteArray());
+		int codeSetSize = codeSet.size();
+		int codeSet2Size = codeSet2.size();
+		codeSet2.retainAll(codeSet);
+		int intersectionSize = codeSet2.size();
+		int unionSize = codeSetSize + codeSet2Size - intersectionSize;
+		double lzjd = (unionSize - intersectionSize) * 1.0 / unionSize;
+		return lzjd;
+	}
+
 	@Override
 	public void close() {
 		// No resource used
 	}
-	
+
 
     /**
      * Compress method
@@ -215,7 +229,7 @@ public class LZJDistance implements IVariableWindowStrategy {
     public static HashSet<String> toLZSet77(byte[] buf) {
     	HashSet<String> lz77strings = new HashSet<>();
     	int pos = 0;
-    	
+
 	    String currentMatch = "";
 	    StringBuffer mSearchBuffer = new StringBuffer();
 
@@ -250,6 +264,6 @@ public class LZJDistance implements IVariableWindowStrategy {
 	    }
 	    return lz77strings;
     }
-    
-	  
+
+
 }

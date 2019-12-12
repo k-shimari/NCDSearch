@@ -23,6 +23,14 @@ public class ByteLCSDistance implements ICodeDistanceStrategy {
 	    return 1 - lcs * 1.0 / (query.length + another.length - lcs);
 	}
 
+	@Override
+	public double computeDistance(TokenSequence code, TokenSequence code2) {
+		byte[] query = code.toByteArray();
+		byte[] another = code2.toByteArray();
+		int lcs = computeLCS(query, another);
+	    return 1 - lcs * 1.0 / (query.length + another.length - lcs);
+	}
+
 	static int computeLCS(byte[] query, byte[] another) {
 		int[][] score = new int[query.length][another.length];
 		int maxScore = 0;
