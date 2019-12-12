@@ -12,19 +12,14 @@ public abstract class Clustering {
 	 * @param fragments
 	 * @return clusters
 	 */
-	String strategy;
 	int topN;
 	List<JsonNode> allNode;
+	String strategy;
 
-	public Clustering(String mode, int topN, List<JsonNode> allNode) {
-		this.strategy = mode;
+	public Clustering(int topN, List<JsonNode> allNode, String strategy) {
 		this.topN = topN;
 		this.allNode = allNode;
-	}
-
-	public Clustering(int topN, List<JsonNode> allNode) {
-		this.topN = topN;
-		this.allNode = allNode;
+		this.strategy = strategy;
 	}
 
 	public abstract List<List<JsonNode>> clustering();

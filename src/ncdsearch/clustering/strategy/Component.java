@@ -51,7 +51,7 @@ public class Component {
 		JsonNodePair pair = new JsonNodePair(this.node, another.node);
 		Double distance = edgeMap.get(pair);
 		if (distance == null) {
-			distance = strategy.computeDistance(another.node.getTokens());
+			distance = strategy.computeDistance(this.node.getTokens(), another.node.getTokens());
 			//			System.err.println(this.fragment.getDistance() + ", " + another.fragment.getDistance() + ", " + distance);
 			//			if(distance > 0.5) distance = 1.0;
 			edgeMap.put(pair, distance);

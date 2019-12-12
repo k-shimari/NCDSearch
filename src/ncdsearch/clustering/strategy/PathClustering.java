@@ -12,17 +12,15 @@ import ncdsearch.clustering.JsonNodeInfo;
 public class PathClustering extends Clustering {
 
 	private Map<String, List<JsonNode>> pathJsonMap = new HashMap<>();
-	private String pathType;
 
-	public PathClustering(int topN, List<JsonNode> allNode, String pathType) {
-		super(topN, allNode);
-		this.pathType = pathType;
+	public PathClustering(int topN, List<JsonNode> allNode, String strategy) {
+		super(topN, allNode, strategy);
 	}
 
 	@Override
 	public List<List<JsonNode>> clustering() {
 		for (JsonNode node : allNode) {
-			String path = pathType.equals("DIR") ? JsonNodeInfo.getNodeDir(node) : JsonNodeInfo.getNodeFile(node);
+			String path = strategy.equals("DIR") ? JsonNodeInfo.getNodeDir(node) : JsonNodeInfo.getNodeFile(node);
 			if (pathJsonMap.containsKey(path)) {
 				List<JsonNode> list = pathJsonMap.get(path);
 				list.add(node);
