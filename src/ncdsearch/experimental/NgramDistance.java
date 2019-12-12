@@ -11,12 +11,12 @@ public class NgramDistance implements ICodeDistanceStrategy {
 
 	private int n;
 	private TLongArrayList query;
-	
+
 	public NgramDistance(TokenSequence query, int n) {
 		this.query = createNgram(query.toByteArray(), n);
 		this.n = n;
 	}
-	
+
 	static TLongArrayList createNgram(byte[] buf, int n) {
 		assert n < 8;
 		TLongArrayList result = new TLongArrayList(buf.length-(n-1));
@@ -25,10 +25,10 @@ public class NgramDistance implements ICodeDistanceStrategy {
 		long l = 0;
 		for (int i=0; i<n-1; i++) {
 			bitmask = (bitmask << 8) + 0xff;
-			l = (l << 8) + buf[i]; 
+			l = (l << 8) + buf[i];
 		}
 		for (int i=n-1; i<buf.length; i++) {
-			l = ((l << 8) + buf[i]) & bitmask; 
+			l = ((l << 8) + buf[i]) & bitmask;
 			result.add(l);
 		}
 		result.sort();
@@ -39,6 +39,13 @@ public class NgramDistance implements ICodeDistanceStrategy {
 	public double computeDistance(TokenSequence code) {
 		TLongArrayList another = createNgram(code.toByteArray(), n);
 		return 1 - computeSimilarity(query, another);
+	}
+
+	@Override
+	public double computeDistance(TokenSequence code,TokenSequence code2) {
+		TLongArrayList one = createNgram(code.toByteArray(), n);
+		TLongArrayList another = createNgram(code2.toByteArray(), n);
+		return 1 - computeSimilarity(one, another);
 	}
 
 	static double computeSimilarity(TLongArrayList query, TLongArrayList another) {
@@ -64,9 +71,9 @@ public class NgramDistance implements ICodeDistanceStrategy {
 		}
 		return count;
 	}
-	
+
 	@Override
 	public void close() {
-		// This object has no system resource. 
+		// This object has no system resource.
 	}
 }

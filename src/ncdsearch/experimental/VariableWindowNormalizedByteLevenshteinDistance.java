@@ -8,7 +8,7 @@ public class VariableWindowNormalizedByteLevenshteinDistance implements IVariabl
 
 	private byte[] query;
 	private int bestWindowSize;
-	
+
 	public VariableWindowNormalizedByteLevenshteinDistance(TokenSequence query) {
 		this.query = query.toByteArray();
 	}
@@ -18,7 +18,14 @@ public class VariableWindowNormalizedByteLevenshteinDistance implements IVariabl
 		byte[] another = code.toByteArray();
 		return NormalizedByteLevenshteinDistance.computeLevenshteinDistance(query, another) * 1.0 / Math.max(query.length, another.length);
 	}
-	
+
+	@Override
+	public double computeDistance(TokenSequence code, TokenSequence code2) {
+		byte[] one = code.toByteArray();
+		byte[] another = code2.toByteArray();
+		return NormalizedByteLevenshteinDistance.computeLevenshteinDistance(one, another) * 1.0 / Math.max(one.length, another.length);
+	}
+
 	@Override
 	public double findBestMatch(TokenSequence code, int startPos, int endPos, double threshold) {
 		if (endPos > code.size()) endPos = code.size();
@@ -45,6 +52,6 @@ public class VariableWindowNormalizedByteLevenshteinDistance implements IVariabl
 
 	@Override
 	public void close() {
-		// This object has no system resource. 
+		// This object has no system resource.
 	}
 }

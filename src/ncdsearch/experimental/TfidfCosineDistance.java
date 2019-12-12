@@ -20,10 +20,10 @@ public class TfidfCosineDistance implements ICodeDistanceStrategy {
 
 	private static TObjectIntHashMap<String> dfMap;
 	private static TFIDFVector queryTFIDF;
-	
-	
+
+
 	private static synchronized void computeDocumentFrequency(ArrayList<String> sourceDirs, FileType queryFileType, TokenSequence query, Charset charset) {
-		if (dfMap == null) {			
+		if (dfMap == null) {
 			dfMap = new TObjectIntHashMap<>();
 			try {
 				DirectoryScan dir = new DirectoryScan(sourceDirs);
@@ -50,40 +50,40 @@ public class TfidfCosineDistance implements ICodeDistanceStrategy {
 			}
 		}
 	}
-	
+
 	/**
-	 * Build IDF from source files   
+	 * Build IDF from source files
 	 */
 	public TfidfCosineDistance(ArrayList<String> sourceDirs, FileType queryFileType, TokenSequence query, Charset charset) {
 		computeDocumentFrequency(sourceDirs, queryFileType, query, charset);
 	}
-	
+
 	/**
-	 * Make a tf-idf query using pre-computed IDF 
-	 * @param dfMap maps a token to its document frequency 
+	 * Make a tf-idf query using pre-computed IDF
+	 * @param dfMap maps a token to its document frequency
 	 * @param query
 	 */
 	protected TfidfCosineDistance(TObjectIntHashMap<String> dfMap, TokenSequence query) {
 		TfidfCosineDistance.dfMap = dfMap;
 		queryTFIDF = new TFIDFVector(query);
 	}
-	
-	
+
+
 	@Override
 	public double computeDistance(TokenSequence code) {
 		TFIDFVector codeTFIDF = new TFIDFVector(code);
 		return 1 - queryTFIDF.getCosineSimilarity(codeTFIDF);
 	}
-	
+
 	@Override
 	public void close() {
 	}
-	
+
 	private static class TFIDFVector {
 
 		private TObjectDoubleHashMap<String> vec;
 		private double absolute;
-		
+
 		public TFIDFVector(TokenSequence tokens) {
 			vec = new TObjectDoubleHashMap<>();
 			for (int i=0; i<tokens.size(); i++) {
@@ -95,13 +95,13 @@ public class TfidfCosineDistance implements ICodeDistanceStrategy {
 				double tf = vec.get(t);
 				int df = dfMap.get(t);
 				// assume IDF == 1 if the term does not appear in documents
-				double tfidf = (df > 0) ? (tf / dfMap.get(t)) : tf; 
+				double tfidf = (df > 0) ? (tf / dfMap.get(t)) : tf;
 				vec.put(t, tfidf);
-				squareSum += tfidf * tfidf; 
+				squareSum += tfidf * tfidf;
 			}
 			absolute = Math.sqrt(squareSum);
 		}
-		
+
 		public double getCosineSimilarity(TFIDFVector another) {
 			double sum = 0;
 			for (String t: vec.keySet()) {
@@ -110,8 +110,8 @@ public class TfidfCosineDistance implements ICodeDistanceStrategy {
 			}
 			return sum / (this.absolute * another.absolute);
 		}
-		
+
 	}
-	
+
 
 }

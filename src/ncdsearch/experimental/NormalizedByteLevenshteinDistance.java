@@ -18,6 +18,14 @@ public class NormalizedByteLevenshteinDistance implements ICodeDistanceStrategy 
 	    return computeLevenshteinDistance(query, another) * 1.0 / Math.max(query.length, another.length);
 	}
 
+	@Override
+	public double computeDistance(TokenSequence code,TokenSequence code2) {
+		byte[] one = code.toByteArray();
+		byte[] another = code2.toByteArray();
+	    return computeLevenshteinDistance(one, another) * 1.0 / Math.max(one.length, another.length);
+	}
+
+
 	static int computeLevenshteinDistance(byte[] query, byte[] another) {
 		int[][] score = computeLevenshteinDistanceTable(query, another);
 	    return score[query.length][another.length];
@@ -47,3 +55,5 @@ public class NormalizedByteLevenshteinDistance implements ICodeDistanceStrategy 
 		// This object has no system resource.
 	}
 }
+
+
