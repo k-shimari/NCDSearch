@@ -1,48 +1,51 @@
-package ncdsearch_clustering.strategy;
-
+package ncdsearch.clustering.strategy;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import gnu.trove.map.hash.TIntDoubleHashMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
-import ncdsearch_clustering.old_strategy.Cluster;
-import ncdsearch_clustering.old_strategy.IClusteringStrategy;
 
 
-public class Shortest implements IClusteringStrategy {
+public class Shortest extends Clustering {
 	private TIntObjectHashMap<TIntDoubleHashMap> distanceMap;
 	private TIntDoubleHashMap minDistanceMap;
 	private TIntObjectHashMap<Cluster> clusterMap;
 
 	private int totalVertexNumber;
 	private boolean[] removedFlagMap;
-//	private boolean[][] removedEdgeFlagMap;
 
-	public Shortest() {
+
+	public Shortest(int topN, List<JsonNode> allNode) {
+		super(topN, allNode);
 		totalVertexNumber = 0;
+		//assign allnode to fragment
+
 	}
 
 	@Override
-	public List<Cluster> clustering(List<Component> fragments) {
+	public List<List<JsonNode>> clustering() {
 		distanceMap = new TIntObjectHashMap<>();
 		minDistanceMap = new TIntDoubleHashMap();
 		clusterMap = new TIntObjectHashMap<>();
 
-		totalVertexNumber = fragments.size();
+		totalVertexNumber = allNode.size();
 		removedFlagMap = new boolean[totalVertexNumber];
 		Arrays.fill(removedFlagMap, false);
-		createInitialClusters(fragments);
+		createInitialClusters(allNode);
 		int mapSize = totalVertexNumber;
 		System.err.println("initial clusters : " + mapSize);
 		int idx = 0;
-		while(mapSize > 5) {
+		while (mapSize > 5) {
 			idx++;
 			update();
 			int count = 0;
-			for(boolean flag :removedFlagMap) {
-				if(!flag)count++;
+			for (boolean flag : removedFlagMap) {
+				if (!flag)
+					count++;
 			}
 			mapSize = count;
 			//				System.err.println("before : " + beforeMax);
@@ -52,18 +55,19 @@ public class Shortest implements IClusteringStrategy {
 		System.err.println("iterate count : " + idx);
 		List<Cluster> finalCluster = new ArrayList<>();
 
-		for(int i = 0; i < totalVertexNumber; i++) {
-			if(!removedFlagMap[i])finalCluster.add(clusterMap.get(i));
+		for (int i = 0; i < totalVertexNumber; i++) {
+			if (!removedFlagMap[i])
+				finalCluster.add(clusterMap.get(i));
 		}
 
 		return finalCluster;
 	}
 
-	private List<Cluster> createInitialClusters(List<Component> fragments){
+	private List<Cluster> createInitialClusters(List<JsonNode> nodes) {
 		List<Cluster> clusters = new ArrayList<>();
 		int index = 0;
-		for(Component fragment : fragments) {
-			Cluster cluster = new Cluster(fragment);
+		for (JsonNode node : nodes) {
+			Cluster cluster = new Cluster(node);
 			clusterMap.put(index++, cluster);
 			clusters.add(cluster);
 		}
@@ -71,46 +75,47 @@ public class Shortest implements IClusteringStrategy {
 		return clusters;
 	}
 
-	private void calcInitialDistances(List<Cluster> clusters){
+	private void calcInitialDistances(List<Cluster> clusters) {
 		int arraySize = clusters.size();
-		for(int i = 0; i < arraySize; i++) {
+		for (int i = 0; i < arraySize; i++) {
 			Cluster target = clusters.get(i);
 			TIntDoubleHashMap map = new TIntDoubleHashMap();
 			double min = Double.MAX_VALUE;
-			for(int j = 0; j < arraySize; j++) {
-				if(i < j) {
+			for (int j = 0; j < arraySize; j++) {
+				if (i < j) {
 					Cluster cluster = clusters.get(j);
 					double distance = calcMinDistance(target, cluster);
 					map.put(j, distance);
-					if(distance < min ) min = distance;
+					if (distance < min)
+						min = distance;
 					//							System.err.print(distance + ",");
-				}else if(i > j) {
-					double distance  = distanceMap.get(j).get(i);
+				} else if (i > j) {
+					double distance = distanceMap.get(j).get(i);
 					map.put(j, distance);
-					if(distance < min ) min = distance;
+					if (distance < min)
+						min = distance;
 					//							System.err.print(distance + ",");
 				}
 			}
-					//				System.err.print("aaa ,");
-					//				System.err.println();
+			//				System.err.print("aaa ,");
+			//				System.err.println();
 			distanceMap.put(i, map);
 			minDistanceMap.put(i, min);
 		}
 	}
 
-
 	/**
 	 * To be fixed
 	 */
 	private void setMinDistance() {
-		for(int i = 0; i < totalVertexNumber; i++) {
-			if(!removedFlagMap[i]) {
+		for (int i = 0; i < totalVertexNumber; i++) {
+			if (!removedFlagMap[i]) {
 				double min = Double.MAX_VALUE;
 				TIntDoubleHashMap innerMap = distanceMap.get(i);
-				for(int j = 0; j < totalVertexNumber; j++) {
-					if(i != j && !removedFlagMap[j]) {
+				for (int j = 0; j < totalVertexNumber; j++) {
+					if (i != j && !removedFlagMap[j]) {
 						double distance = innerMap.get(j);
-						if(distance < min) {
+						if (distance < min) {
 							min = distance;
 						}
 					}
@@ -125,10 +130,10 @@ public class Shortest implements IClusteringStrategy {
 		double minDistance = Double.MAX_VALUE;
 		int minI = -1;
 
-		for(int i = 0; i < totalVertexNumber; i++) {
-			if(!removedFlagMap[i]) {
+		for (int i = 0; i < totalVertexNumber; i++) {
+			if (!removedFlagMap[i]) {
 				double distance = minDistanceMap.get(i);
-				if(distance < minDistance ) {
+				if (distance < minDistance) {
 					minDistance = distance;
 					minI = i;
 				}
@@ -137,19 +142,19 @@ public class Shortest implements IClusteringStrategy {
 		int minJ = -1;
 		TIntDoubleHashMap iMap = distanceMap.get(minI);
 
-		for(int j = 0; j < totalVertexNumber; j++) {
-			if(!removedFlagMap[j] && j != minI && minDistance == iMap.get(j)) {
+		for (int j = 0; j < totalVertexNumber; j++) {
+			if (!removedFlagMap[j] && j != minI && minDistance == iMap.get(j)) {
 				minJ = j;
 			}
 		}
 		TIntDoubleHashMap jMap = distanceMap.get(minJ);
-		for(int k = 0; k < totalVertexNumber; k++) {
-			if(!removedFlagMap[k] && k != minI && k != minJ) {
+		for (int k = 0; k < totalVertexNumber; k++) {
+			if (!removedFlagMap[k] && k != minI && k != minJ) {
 				//					System.err.println("maxi = " + maxI + " maxj = " + maxJ +" k = " + k);
 				//					double ivalue = iMap.get(k);
 				//					double jvalue = jMap.get(k);
 				//					System.err.println("iMap.get(k) = " + ivalue + " jMap.get(k) = " + jvalue);
-				jMap.put(k, Math.min(iMap.get(k),jMap.get(k)));
+				jMap.put(k, Math.min(iMap.get(k), jMap.get(k)));
 			}
 		}
 		/*remove clusterI and combine I to J as J*/
@@ -166,17 +171,16 @@ public class Shortest implements IClusteringStrategy {
 		//				System.err.print(maxDeltaModularityMap.get(i) + " ");
 		//			}
 		//			System.err.println();
-		for(int i = 0; i < totalVertexNumber; i++) {
-			if(!removedFlagMap[i]) {
+		for (int i = 0; i < totalVertexNumber; i++) {
+			if (!removedFlagMap[i]) {
 				double distance = minDistanceMap.get(i);
-				if(distance < minDistance ) {
+				if (distance < minDistance) {
 					minDistance = distance;
 				}
 			}
 		}
-	//	return maxDeltaModularity;
+		//	return maxDeltaModularity;
 	}
-
 
 	private double calcMinDistance(Cluster c1, Cluster c2) {
 		return c1.getMinDistance(c2);
