@@ -121,22 +121,7 @@ public class Evaluate {
 				+ (double) totalAnswerNode / totalResultNode);
 	}
 
-	public Clusters getIdealClusters(Clusters cs, Answers a) {
-		Clusters ics = new Clusters();
-		for (List<JsonNode> nodes : cs.getRepJsonMap().values()) {
-			List<JsonNode> sortedNodes = JsonNodesInfo.getSortedListbyDistance(nodes);
-			if (isContainInAnswer(nodes, a.getAllNode())) {
-				ics.addClusterReps(sortedNodes);
-				ics.addAllNode(nodes);
-				for (JsonNode node : sortedNodes) {
-					ics.putRepJsonMap(node, cs.getRepJsonMap().get(node));
-				}
-			} else {
-				nonAnswerRepSize += topN;
-			}
-		}
-		return ics;
-	}
+
 
 	public Clusters getFilteredClusters(Clusters cs, Answers a) {
 		Clusters fcs = new Clusters();
