@@ -7,7 +7,9 @@ import java.util.Map;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import ncdsearch.clustering.strategy.Clustering;
 import ncdsearch.clustering.strategy.PathClustering;
+import ncdsearch.clustering.strategy.Shortest;
 
 public class Clusters {
 
@@ -77,11 +79,14 @@ public class Clusters {
 	}
 
 	public void clustering() {
-		/*Dir Mode*/
+		Clustering c;
 		if (clustringStrategy.equals("DIR") || clustringStrategy.equals("FILE")) {
-			PathClustering p = new PathClustering(topN, allNode, clustringStrategy);
-			clusterContents = p.clustering();
+			c = new PathClustering(topN, allNode, clustringStrategy);
+
+		} else {
+			c = new Shortest(topN, allNode, clustringStrategy);
 		}
+		clusterContents = c.clustering();
 
 	}
 

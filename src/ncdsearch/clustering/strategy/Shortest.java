@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import gnu.trove.map.hash.TIntDoubleHashMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 
-
 public class Shortest extends Clustering {
 	private TIntObjectHashMap<TIntDoubleHashMap> distanceMap;
 	private TIntDoubleHashMap minDistanceMap;
@@ -18,9 +17,8 @@ public class Shortest extends Clustering {
 	private int totalVertexNumber;
 	private boolean[] removedFlagMap;
 
-
-	public Shortest(int topN, List<JsonNode> allNode) {
-		super(topN, allNode);
+	public Shortest(int topN, List<JsonNode> allNode, String strategy) {
+		super(topN, allNode, strategy);
 		totalVertexNumber = 0;
 		//assign allnode to fragment
 
