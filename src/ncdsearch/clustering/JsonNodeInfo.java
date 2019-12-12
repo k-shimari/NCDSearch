@@ -15,10 +15,8 @@ public class JsonNodeInfo {
 	}
 
 	public static String getNodeAnswerFile(JsonNode node) {
-
 		return node.get("path").asText() + "/" + node.get("file").asText().toString();
 	}
-
 
 	public static double getNodeDistance(JsonNode node) {
 		return node.get("Distance").asDouble();
@@ -40,6 +38,13 @@ public class JsonNodeInfo {
 		return node.get("eline").asInt();
 	}
 
+	public static int getNodeStartChar(JsonNode node) {
+		return node.get("StartChar").asInt();
+	}
+
+	public static int getNodeEndChar(JsonNode node) {
+		return node.get("EndChar").asInt();
+	}
 
 
 }
