@@ -46,5 +46,8 @@ public class JsonNodeInfo {
 		return node.get("EndChar").asInt();
 	}
 
+	public static String getNodeTokens(JsonNode node) {
+		return node.get("Tokens").asText();
+	}
 
 }
