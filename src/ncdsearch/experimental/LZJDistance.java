@@ -98,7 +98,7 @@ public class LZJDistance implements IVariableWindowStrategy {
 	 * For testing purpose
 	 * @param strict
 	 */
-	private LZJDistance(boolean strict) {
+	public LZJDistance(boolean strict) {
 		this.querySet = new HashSet<>();
 		this.strict = strict;
 	}
@@ -201,9 +201,9 @@ public class LZJDistance implements IVariableWindowStrategy {
 	}
 
 	@Override
-	public double computeDistance(TokenSequence code, TokenSequence code2) {
-		HashSet<ByteArrayFragment> codeSet = toLZSet(code.toByteArray());
-		HashSet<ByteArrayFragment> codeSet2 = toLZSet(code2.toByteArray());
+	public double computeDistance(String code, String code2) {
+		HashSet<ByteArrayFragment> codeSet = toLZSet(code.getBytes());
+		HashSet<ByteArrayFragment> codeSet2 = toLZSet(code2.getBytes());
 		int codeSetSize = codeSet.size();
 		int codeSet2Size = codeSet2.size();
 		codeSet2.retainAll(codeSet);

@@ -26,6 +26,13 @@ public class NormalizedCompressionDistance implements ICodeDistanceStrategy {
 		baseSize = strategy.getDataSize(baseBytes, 0, baseBytes.length);
 	}
 
+	public NormalizedCompressionDistance() {
+	}
+
+	public NormalizedCompressionDistance(ICompressionStrategy strategy) {
+		this.strategy = strategy;
+	}
+
 	/**
 	 * Release an internal resource.
 	 */
@@ -50,11 +57,12 @@ public class NormalizedCompressionDistance implements ICodeDistanceStrategy {
     }
 
 	@Override
-    public double computeDistance(TokenSequence target, TokenSequence target2) {
-    	byte[] targetBytes = target.toByteArray();
-    	byte[] target2Bytes = target2.toByteArray();
+    public double computeDistance(String target, String target2) {
+    	byte[] targetBytes = target.getBytes();
+    	byte[] target2Bytes = target2.getBytes();
+    	baseSize = strategy.getDataSize(targetBytes, 0, targetBytes.length);
 
-   		byte[] result = new byte[targetBytes.length + target2Bytes.length];
+    	byte[] result = new byte[targetBytes.length + target2Bytes.length];
     	System.arraycopy(targetBytes, 0, result, 0, targetBytes.length);
     	System.arraycopy(target2Bytes, 0, result, targetBytes.length, target2Bytes.length);
 

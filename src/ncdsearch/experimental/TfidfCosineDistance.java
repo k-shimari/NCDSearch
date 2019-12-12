@@ -76,7 +76,7 @@ public class TfidfCosineDistance implements ICodeDistanceStrategy {
 	}
 
 	@Override
-	public double computeDistance(TokenSequence code, TokenSequence code2) {
+	public double computeDistance(String code, String code2) {
 		System.err.println("TODO@TF-IDF Distance");
 		System.exit(1);
 		//		TFIDFVector codeTFIDF = new TFIDFVector(code);

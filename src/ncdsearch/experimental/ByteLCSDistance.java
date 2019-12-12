@@ -16,6 +16,9 @@ public class ByteLCSDistance implements ICodeDistanceStrategy {
 		this.query = query.toByteArray();
 	}
 
+	public ByteLCSDistance() {
+	}
+
 	@Override
 	public double computeDistance(TokenSequence code) {
 		byte[] another = code.toByteArray();
@@ -24,9 +27,9 @@ public class ByteLCSDistance implements ICodeDistanceStrategy {
 	}
 
 	@Override
-	public double computeDistance(TokenSequence code, TokenSequence code2) {
-		byte[] query = code.toByteArray();
-		byte[] another = code2.toByteArray();
+	public double computeDistance(String code, String code2) {
+		byte[] query = code.getBytes();
+		byte[] another = code2.getBytes();
 		int lcs = computeLCS(query, another);
 	    return 1 - lcs * 1.0 / (query.length + another.length - lcs);
 	}

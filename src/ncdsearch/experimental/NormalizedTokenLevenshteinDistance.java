@@ -12,6 +12,9 @@ public class NormalizedTokenLevenshteinDistance extends TokenLevenshteinDistance
 		this.queryLength = query.size();
 	}
 
+	public NormalizedTokenLevenshteinDistance() {
+	}
+
 	@Override
 	public double computeDistance(TokenSequence code) {
 		double d = super.computeDistance(code);
@@ -19,9 +22,9 @@ public class NormalizedTokenLevenshteinDistance extends TokenLevenshteinDistance
 	}
 
 	@Override
-	public double computeDistance(TokenSequence code, TokenSequence code2) {
+	public double computeDistance(String code, String code2) {
 		double d = super.computeDistance(code, code2);
-		return d * 1.0 / Math.max(code.size(), code2.size());
+		return d * 1.0 / Math.max(code.length(), code2.length());
 	}
 
 	@Override

@@ -59,12 +59,12 @@ public class SearchConfiguration {
 	public static final String ARG_ENCODING = "-encoding";
 	public static final String ARG_ALLOW_OVERLAP = "-allowoverlap";
 	public static final String ARG_FORMAT_JSON = "-json";
-	
+
 	public static final String ARG_FILE_LIST = "-l";
 	public static final String ARG_INCLUDE = "-i";
 	public static final String ARG_NOSEPARATOR = "-nosep";
 	public static final String ARG_SHOW_TIME = "-time";
-	
+
 	private static final String ALGORITHM_TOKEN_LEVENSHTEIN_DISTANCE = "tld";
 	private static final String ALGORITHM_BYTE_LCS_DISTANCE = "blcs";
 	private static final String ALGORITHM_NORMALIZED_BYTE_LEVENSHTEIN_DISTANCE = "nbld";
@@ -77,17 +77,17 @@ public class SearchConfiguration {
 	private static final String ALGORITHM_LAMPEL_ZIV_JACCARD_DISTANCE = "lzjd";
 	private static final String ALGORITHM_LAMPEL_ZIV_JACCARD_DISTANCE_STRICT = "strict";
 	private static final String ALGORITHM_LAMPEL_ZIV_JACCARD_DISTANCE_WITH_NCD = "ncd";
-	
+
 	private static final String[] ALGORITHMS = {ALGORITHM_TOKEN_LEVENSHTEIN_DISTANCE,
 			ALGORITHM_BYTE_LCS_DISTANCE, ALGORITHM_NORMALIZED_BYTE_LEVENSHTEIN_DISTANCE,
-			ALGORITHM_NORMALIZED_TOKEN_LEVENSHTEIN_DISTANCE, 
+			ALGORITHM_NORMALIZED_TOKEN_LEVENSHTEIN_DISTANCE,
 			ALGORITHM_VARIABLE_WINDOW_NORMALIZED_BYTE_LEVENSHTEIN_DISTANCE,
 			ALGORITHM_VARIABLE_WINDOW_NORMALIZED_TOKEN_LEVENSHTEIN_DISTANCE,
 			ALGORITHM_BYTE_NGRAM_MULTISET,
-			ALGORITHM_BYTE_NGRAM_SET, ALGORITHM_TFIDF, ALGORITHM_LAMPEL_ZIV_JACCARD_DISTANCE, 
+			ALGORITHM_BYTE_NGRAM_SET, ALGORITHM_TFIDF, ALGORITHM_LAMPEL_ZIV_JACCARD_DISTANCE,
 			ALGORITHM_LAMPEL_ZIV_JACCARD_DISTANCE_STRICT};
-	
-	
+
+
 
 
 	private TokenSequence queryTokens;
@@ -97,11 +97,11 @@ public class SearchConfiguration {
 	private boolean normalization = false;
 	private PredictionFilter prefilter = null;
 	private ArrayList<String> inclusionFilters = new ArrayList<>();
-	
-	private String argumentError;
-	
 
-	private double WINDOW_STEP = 0.05; 
+	private String argumentError;
+
+
+	private double WINDOW_STEP = 0.05;
 	private double MIN_WINDOW = 0.8;
 	private double MAX_WINDOW = 1.2;
 	private double threshold = 0.5;
@@ -117,9 +117,9 @@ public class SearchConfiguration {
 	private String algorithm = "zip";
 	private Charset charset;
 	private String charsetError;
-	
+
 	private File filelistName = null;
-	
+
 	private String queryFilename = null;
 	private int queryStartLine = 0;
 	private int queryEndLine = Integer.MAX_VALUE;
@@ -253,17 +253,17 @@ public class SearchConfiguration {
 		if (sourceDirs.size() == 0) sourceDirs.add(".");
 		if (queryFileType == null) queryFileType = FileType.JAVA;
 		if (charset == null) charset = StandardCharsets.UTF_8;
-	
-		
-		
+
+
+
 		TokenReader reader;
 		if (queryFilename != null) {
 			if (queryFilename.equals(ARG_QUERY_FILENAME_STDIN)) {
-				reader = TokenReaderFactory.create(queryFileType, new InputStreamReader(System.in)); 
+				reader = TokenReaderFactory.create(queryFileType, new InputStreamReader(System.in));
 			} else {
 				try {
 					File f = new File(queryFilename);
-					reader = TokenReaderFactory.create(queryFileType, Files.readAllBytes(f.toPath()), charset); 
+					reader = TokenReaderFactory.create(queryFileType, Files.readAllBytes(f.toPath()), charset);
 				} catch (IOException e) {
 					argumentError = "Failed to read " + queryFilename + " as a query.";
 					return;
@@ -275,9 +275,9 @@ public class SearchConfiguration {
 			argumentError = "Query is unspecified. Use a part of a file (-q FILENAME -sline LINE -eline LINE) or tokens (-l LANG -e QUERY)";
 			return;
 		}
-		
-		queryTokens = new TokenSequence(reader, normalization, useSeparator); 
-		
+
+		queryTokens = new TokenSequence(reader, normalization, useSeparator);
+
 		if (queryFilename != null) {
 			queryTokens = queryTokens.substringByLine(queryStartLine, queryEndLine);
 			if (queryTokens == null) {
@@ -285,11 +285,11 @@ public class SearchConfiguration {
 				return;
 			}
 		}
-		
+
 		if (prefilter != null) {
 			prefilter.setQuery(queryTokens);
 		}
-		 
+
 		TDoubleArrayList windowRatio = new TDoubleArrayList();
 		for (double start = 1.0; start >= MIN_WINDOW; start -= WINDOW_STEP) {
 			windowRatio.add(start);
@@ -298,7 +298,7 @@ public class SearchConfiguration {
 			windowRatio.add(start);
 		}
 		windowRatio.sort();
-		
+
 		if (algorithm.startsWith(ALGORITHM_TOKEN_LEVENSHTEIN_DISTANCE)) {
 			windowSize = new TIntArrayList();
 			windowSize.add(queryTokens.size());
@@ -318,21 +318,21 @@ public class SearchConfiguration {
 		}
 
 	}
-	
+
 	/**
 	 * @return true if arguments are valid and also a query is specified.
 	 */
 	public boolean isValidConfiguration() {
-		return queryTokens != null && 
-				windowSize != null && 
+		return queryTokens != null &&
+				windowSize != null &&
 				isValidAlgorithmName(algorithm) &&
 				((filelistName != null && filelistName.isFile() && filelistName.canRead()) || sourceDirs.size() > 0) &&
 				windowSize.size() > 0;
 	}
-	
+
 	private void printConfig(IReport report) throws IOException {
 		// entire validity
-		report.writeConfig("Configuration", isValidConfiguration() ? "valid": "invalid - Could not execute a search"); 
+		report.writeConfig("Configuration", isValidConfiguration() ? "valid": "invalid - Could not execute a search");
 
 		// algorithm name
 		if (isValidAlgorithmName(algorithm)) {
@@ -340,7 +340,7 @@ public class SearchConfiguration {
 		} else {
 			report.writeConfig("Strategy", algorithm + " (invalid name)");
 		}
-		
+
 		// window size
 		report.writeConfig("MinWindowSizeRatio", Double.toString(MIN_WINDOW));
 		report.writeConfig("MaxWindowSizeRatio", Double.toString(MAX_WINDOW));
@@ -366,7 +366,7 @@ public class SearchConfiguration {
 		report.writeConfig("UseNormalization", Boolean.toString(normalization));
 		report.writeConfig("UseSeparator", Boolean.toString(useSeparator));
 		report.writeConfig("AllowOverlap", Boolean.toString(allowOverlap));
-		
+
 		if (charsetError != null) {
 			report.writeConfig("Charset", charsetError + " (" + charset.displayName() + " is used)");
 		} else {
@@ -385,7 +385,7 @@ public class SearchConfiguration {
 
 	public boolean isValidAlgorithmName(String name) {
 		for (String al: ALGORITHMS) {
-			if (name.startsWith(al)) return true; 
+			if (name.startsWith(al)) return true;
 		}
 
 		try {
@@ -395,11 +395,11 @@ public class SearchConfiguration {
 			return false;
 		}
 	}
-	
+
 	public TokenSequence getQueryTokens() {
 		return queryTokens;
 	}
-	
+
 	public ICodeDistanceStrategy createStrategy() {
 		if (algorithm.startsWith(ALGORITHM_TOKEN_LEVENSHTEIN_DISTANCE)) {
 			return new TokenLevenshteinDistance(queryTokens);
@@ -437,7 +437,46 @@ public class SearchConfiguration {
 		}
 		return new NormalizedCompressionDistance(queryTokens, Compressor.createInstance(c));
 	}
-	
+
+	public static ICodeDistanceStrategy createStrategy(String algorithm) {
+		if (algorithm.startsWith(ALGORITHM_TOKEN_LEVENSHTEIN_DISTANCE)) {
+			return new TokenLevenshteinDistance();
+		} else if (algorithm.startsWith(ALGORITHM_BYTE_LCS_DISTANCE)) {
+			return new ByteLCSDistance();
+		} else if (algorithm.startsWith(ALGORITHM_NORMALIZED_BYTE_LEVENSHTEIN_DISTANCE)) {
+			return new NormalizedByteLevenshteinDistance();
+		} else if (algorithm.startsWith(ALGORITHM_NORMALIZED_TOKEN_LEVENSHTEIN_DISTANCE)) {
+			return new NormalizedTokenLevenshteinDistance();
+		} else if (algorithm.startsWith(ALGORITHM_VARIABLE_WINDOW_NORMALIZED_BYTE_LEVENSHTEIN_DISTANCE)) {
+			return new VariableWindowNormalizedByteLevenshteinDistance();
+		} else if (algorithm.startsWith(ALGORITHM_VARIABLE_WINDOW_NORMALIZED_TOKEN_LEVENSHTEIN_DISTANCE)) {
+			return new VariableWindowNormalizedTokenLevenshteinDistance();
+		} else if (algorithm.startsWith(ALGORITHM_BYTE_NGRAM_MULTISET)) {
+			int n = Integer.parseInt(algorithm.substring(ALGORITHM_BYTE_NGRAM_MULTISET.length()));
+			return new NgramDistance(n);
+		} else if (algorithm.startsWith(ALGORITHM_BYTE_NGRAM_SET)) {
+			int n = Integer.parseInt(algorithm.substring(ALGORITHM_BYTE_NGRAM_SET.length()));
+			return new NgramSetDistance(n);
+		} else if (algorithm.startsWith(ALGORITHM_TFIDF)) {
+			return new TfidfCosineDistance(sourceDirs, queryFileType, queryTokens, charset);
+		} else if (algorithm.startsWith(ALGORITHM_LAMPEL_ZIV_JACCARD_DISTANCE)) {
+			boolean strict = algorithm.contains(ALGORITHM_LAMPEL_ZIV_JACCARD_DISTANCE_STRICT);
+			LZJDistance d = new LZJDistance(strict);
+			if (algorithm.contains(ALGORITHM_LAMPEL_ZIV_JACCARD_DISTANCE_WITH_NCD)) {
+				d.setSecondaryDistance(new NormalizedCompressionDistance());
+			}
+			return d;
+		}
+
+		Compressor c = Compressor.ZIP;
+		try {
+			c = Compressor.valueOf(algorithm.toUpperCase());
+		} catch (IllegalArgumentException e) {
+		}
+		return new NormalizedCompressionDistance(Compressor.createInstance(c));
+	}
+
+
 	public static String concat(ArrayList<String> queryArgs) {
 		StringBuilder b = new StringBuilder();
 		for (String arg: queryArgs) {
@@ -455,33 +494,33 @@ public class SearchConfiguration {
 		}
 		return b.toString();
 	}
-	
+
 	public boolean isVerbose() {
 		return verbose;
 	}
-	
+
 	public boolean reportTime() {
 		return showTime || verbose;
 	}
-	
+
 	public double getDistanceThreshold() {
 		return threshold;
 	}
-	
+
 	/**
 	 * @return the number of threads used for search.
 	 */
 	public int getThreadCount() {
 		return threads;
 	}
-	
+
 	/**
 	 * @return a list of directory names including source files to be searched.
 	 */
 	public List<String> getSourceDirs() {
 		return sourceDirs;
 	}
-	
+
 	/**
 	 * @return a list of files to be searched.
 	 */
@@ -490,7 +529,7 @@ public class SearchConfiguration {
 			return new FileList(filelistName);
 		} else {
 			return new DirectoryScan(getSourceDirs(), new IFileFilter() {
-				
+
 				@Override
 				public boolean isTarget(File f) {
 					// TODO Auto-generated method stub
@@ -499,39 +538,39 @@ public class SearchConfiguration {
 			});
 		}
 	}
-	
+
 	public boolean useFileList() {
 		return filelistName != null;
 	}
-	
+
 	/**
 	 * @param filepath
-	 * @return true if the file content should be scanned. 
+	 * @return true if the file content should be scanned.
 	 */
 	public boolean isSearchTarget(String filepath) {
 		FileType filetype = TokenReaderFactory.getFileType(filepath);
 		boolean match = (queryFileType == filetype);
 		if (!match) {
-			// Check file name-based filters  
+			// Check file name-based filters
 			for (String inclusionFilter: inclusionFilters) {
 				match |= filepath.endsWith(inclusionFilter);
 			}
 		}
 		return match;
 	}
-	
+
 	public boolean allowOverlap() {
 		return allowOverlap;
 	}
-	
+
 	public int getLargestWindowSize() {
 		return windowSize.get(windowSize.size()-1);
 	}
-	
+
 	public int getWindowSizeCount() {
 		return windowSize.size();
 	}
-	
+
 	/**
 	 * @param n should be between 0 and getWindowSizeCount()-1.
 	 * @return n-th window size.
@@ -539,35 +578,35 @@ public class SearchConfiguration {
 	public int getWindowSize(int n) {
 		return windowSize.get(n);
 	}
-	
+
 	public Charset getSourceCharset() {
 		return charset;
 	}
-	
+
 	public FileType getQueryLanguage() {
 		return queryFileType;
 	}
-	
+
 	public boolean isFullScan() {
 		return fullscan;
 	}
-	
+
 	public PredictionFilter getPrefilter() {
 		return prefilter;
 	}
-	
+
 	public boolean reportPositionDetail() {
 		return reportPositionDetail;
 	}
-	
+
 	public boolean useNormalization() {
 		return normalization;
 	}
-	
+
 	public boolean useSeparator() {
 		return useSeparator;
 	}
-	
+
 	public IReport getReport() throws IOException {
 		IReport report;
 		if (reportJson) {
@@ -578,7 +617,7 @@ public class SearchConfiguration {
 		printConfig(report);
 		return report;
 	}
-	
+
 	public String getArgumentError() {
 		return argumentError;
 	}

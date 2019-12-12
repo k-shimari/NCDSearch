@@ -10,7 +10,7 @@ public interface ICodeDistanceStrategy extends AutoCloseable {
 	 */
 	public double computeDistance(TokenSequence code);
 
-	public double computeDistance(TokenSequence code, TokenSequence code2);
+	public double computeDistance(String string, String string2);
 
 	/**
 	 * Release an internal resource if the implementation has.

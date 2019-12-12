@@ -20,6 +20,10 @@ public class NgramSetDistance implements ICodeDistanceStrategy {
 		this.n = n;
 	}
 
+	public NgramSetDistance(int n) {
+		this.n = n;
+	}
+
 	static long[] createNgramSet(byte[] buf, int n) {
 		assert n < 8;
 		TLongHashSet result = new TLongHashSet(buf.length-(n-1));
@@ -42,9 +46,9 @@ public class NgramSetDistance implements ICodeDistanceStrategy {
 	}
 
 	@Override
-	public double computeDistance(TokenSequence code, TokenSequence code2) {
-		long[] one = createNgramSet(code.toByteArray(), n);
-		long[] another = createNgramSet(code2.toByteArray(), n);
+	public double computeDistance(String code, String code2) {
+		long[] one = createNgramSet(code.getBytes(), n);
+		long[] another = createNgramSet(code2.getBytes(), n);
 		return 1 - computeSimilarity(one, another);
 	}
 

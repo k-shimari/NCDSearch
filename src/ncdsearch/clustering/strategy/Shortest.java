@@ -33,7 +33,12 @@ public class Shortest extends Clustering {
 		totalVertexNumber = allNode.size();
 		removedFlagMap = new boolean[totalVertexNumber];
 		Arrays.fill(removedFlagMap, false);
-		createInitialClusters(allNode);
+
+		List<Component> components = new ArrayList<>();
+		for (JsonNode node : allNode) {
+			components.add(new Component(node, strategy));
+		}
+		createInitialClusters(components);
 		int mapSize = totalVertexNumber;
 		System.err.println("initial clusters : " + mapSize);
 		int idx = 0;
@@ -61,10 +66,10 @@ public class Shortest extends Clustering {
 		return finalCluster;
 	}
 
-	private List<Cluster> createInitialClusters(List<JsonNode> nodes) {
+	private List<Cluster> createInitialClusters(List<Component> nodes) {
 		List<Cluster> clusters = new ArrayList<>();
 		int index = 0;
-		for (JsonNode node : nodes) {
+		for (Component node : nodes) {
 			Cluster cluster = new Cluster(node);
 			clusterMap.put(index++, cluster);
 			clusters.add(cluster);

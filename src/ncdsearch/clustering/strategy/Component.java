@@ -6,6 +6,7 @@ import java.util.Map;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import ncdsearch.ICodeDistanceStrategy;
+import ncdsearch.SearchConfiguration;
 import ncdsearch.clustering.JsonNodeInfo;
 
 /**
@@ -30,6 +31,14 @@ public class Component {
 	 * @param fragment <p>another Fragment object</p>
 	 * @param strategy <p>distance strategy between code fragments</p>
 	 */
+
+	public Component(JsonNode node, String strategy) {
+		this.node = node;
+		this.strategy = SearchConfiguration.createStrategy(strategy);
+		if (edgeMap == null)
+			edgeMap = new HashMap<>();
+	}
+
 	public Component(JsonNode node, ICodeDistanceStrategy strategy) {
 		this.node = node;
 		this.strategy = strategy;
@@ -51,7 +60,7 @@ public class Component {
 		JsonNodePair pair = new JsonNodePair(this.node, another.node);
 		Double distance = edgeMap.get(pair);
 		if (distance == null) {
-			distance = strategy.computeDistance(this.node.getTokens(), another.node.getTokens());
+			distance = strategy.computeDistance(JsonNodeInfo.getNodeTokens(this.node),JsonNodeInfo.getNodeTokens(another.node));
 			//			System.err.println(this.fragment.getDistance() + ", " + another.fragment.getDistance() + ", " + distance);
 			//			if(distance > 0.5) distance = 1.0;
 			edgeMap.put(pair, distance);

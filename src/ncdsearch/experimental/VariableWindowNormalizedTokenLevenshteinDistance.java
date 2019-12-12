@@ -7,10 +7,13 @@ public class VariableWindowNormalizedTokenLevenshteinDistance extends TokenLeven
 
 	private int queryLength;
 	private int bestWindowSize;
-	
+
 	public VariableWindowNormalizedTokenLevenshteinDistance(TokenSequence query) {
 		super(query);
 		this.queryLength = query.size();
+	}
+
+	public VariableWindowNormalizedTokenLevenshteinDistance() {
 	}
 
 	@Override
@@ -28,21 +31,21 @@ public class VariableWindowNormalizedTokenLevenshteinDistance extends TokenLeven
 				minIndex = i;
 			}
 		}
-		
+
 		bestWindowSize = minIndex;
 		double distance = minDistance * 1.0 / Math.max(queryLength, minIndex);
 		return distance;
 	}
-	
+
 	@Override
 	public int getBestWindowSize() {
 		return bestWindowSize;
 	}
-	
+
 	@Override
 	public void close() {
 		super.close();
 	}
-	
+
 
 }

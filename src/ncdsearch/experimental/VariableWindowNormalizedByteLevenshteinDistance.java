@@ -13,6 +13,9 @@ public class VariableWindowNormalizedByteLevenshteinDistance implements IVariabl
 		this.query = query.toByteArray();
 	}
 
+	public VariableWindowNormalizedByteLevenshteinDistance() {
+	}
+
 	@Override
 	public double computeDistance(TokenSequence code) {
 		byte[] another = code.toByteArray();
@@ -20,9 +23,9 @@ public class VariableWindowNormalizedByteLevenshteinDistance implements IVariabl
 	}
 
 	@Override
-	public double computeDistance(TokenSequence code, TokenSequence code2) {
-		byte[] one = code.toByteArray();
-		byte[] another = code2.toByteArray();
+	public double computeDistance(String code, String code2) {
+		byte[] one = code.getBytes();
+		byte[] another = code2.getBytes();
 		return NormalizedByteLevenshteinDistance.computeLevenshteinDistance(one, another) * 1.0 / Math.max(one.length, another.length);
 	}
 
