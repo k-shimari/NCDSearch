@@ -458,7 +458,9 @@ public class SearchConfiguration {
 			int n = Integer.parseInt(algorithm.substring(ALGORITHM_BYTE_NGRAM_SET.length()));
 			return new NgramSetDistance(n);
 		} else if (algorithm.startsWith(ALGORITHM_TFIDF)) {
-			return new TfidfCosineDistance(sourceDirs, queryFileType, queryTokens, charset);
+			//TODO
+			return new TokenLevenshteinDistance();
+			//return new TfidfCosineDistance(sourceDirs, queryFileType, queryTokens, charset);
 		} else if (algorithm.startsWith(ALGORITHM_LAMPEL_ZIV_JACCARD_DISTANCE)) {
 			boolean strict = algorithm.contains(ALGORITHM_LAMPEL_ZIV_JACCARD_DISTANCE_STRICT);
 			LZJDistance d = new LZJDistance(strict);

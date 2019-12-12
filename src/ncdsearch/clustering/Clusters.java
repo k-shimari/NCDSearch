@@ -85,10 +85,10 @@ public class Clusters {
 			c = new PathClustering(topN, allNode, clustringStrategy);
 
 		} else if (clustringStrategy.equals("SH")) {
-			c = new Shortest(topN, allNode, clustringStrategy);
+			c = new Shortest(topN, allNode, distanceAlgorithm);
 		} else {
 			//tmp
-			c = new Shortest(topN, allNode, clustringStrategy);
+			c = new Shortest(topN, allNode, distanceAlgorithm);
 		}
 		clusterContents = c.clustering();
 

@@ -8,7 +8,7 @@ import ncdsearch.evaluate.IdealEvaluate;
 
 public class Main {
 	private static String clusteringStrategy = "SH";
-	private static String distanceAlgorithm = "tld";
+	private static String distanceAlgorithm = "ncd";
 	private static final int TOPN = 3;
 
 	public static void main(String[] args) {
@@ -16,8 +16,8 @@ public class Main {
 		//String ID = "4";
 		if (args.length > 1)
 			setStrategy(args[1]);
-		callEvaluate(args[0]);
-		//callIdealEvaluate(args);
+		//callEvaluate(args[0]);
+		callIdealEvaluate(args[0]);
 	}
 
 	private static void callEvaluate(String path) {
