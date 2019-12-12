@@ -76,6 +76,15 @@ public class TfidfCosineDistance implements ICodeDistanceStrategy {
 	}
 
 	@Override
+	public double computeDistance(TokenSequence code, TokenSequence code2) {
+		System.err.println("TODO@TF-IDF Distance");
+		System.exit(1);
+		//		TFIDFVector codeTFIDF = new TFIDFVector(code);
+//		return 1 - queryTFIDF.getCosineSimilarity(codeTFIDF);
+		return 0;
+	}
+
+	@Override
 	public void close() {
 	}
 
