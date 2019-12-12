@@ -7,7 +7,8 @@ import ncdsearch.evaluate.Evaluate;
 import ncdsearch.evaluate.IdealEvaluate;
 
 public class Main {
-	private static String clusteringStrategy = "FILE";
+	private static String clusteringStrategy = "SH";
+	private static String distanceAlgorithm = "tld";
 	private static final int TOPN = 3;
 
 	public static void main(String[] args) {
@@ -39,7 +40,7 @@ public class Main {
 			String answerJson = Paths.get(path, ("queries.json")).toAbsolutePath().toString();
 			String inputJson = Paths.get(path, ("result/zip-0.5-fast-k0-" + ID + ".json")).toAbsolutePath()
 					.toString();
-			InitJson ij = new InitJson(clusteringStrategy, TOPN);
+			InitJson ij = new InitJson(clusteringStrategy, distanceAlgorithm, TOPN);
 			Clusters cs = ij.converttoClusters(new File(inputJson));
 			Answers a = ij.converttoAnswer(new File(answerJson), String.valueOf(ID));
 
@@ -55,7 +56,7 @@ public class Main {
 			String answerJson = Paths.get(path, ("queries.json")).toAbsolutePath().toString();
 			String inputJson = Paths.get(path, ("result/zip-0.5-fast-k0-" + ID + ".json")).toAbsolutePath()
 					.toString();
-			InitJson ij = new InitJson(clusteringStrategy, TOPN);
+			InitJson ij = new InitJson(clusteringStrategy, distanceAlgorithm, TOPN);
 			Clusters cs = ij.converttoClusters(new File(inputJson));
 			Answers a = ij.converttoAnswer(new File(answerJson), String.valueOf(ID));
 
@@ -72,6 +73,6 @@ public class Main {
 	}
 
 	private static void setStrategy(String s) {
-			clusteringStrategy = s;
+		clusteringStrategy = s;
 	}
 }

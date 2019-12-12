@@ -7,7 +7,6 @@ import java.util.List;
 
 import gnu.trove.map.hash.TIntDoubleHashMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
-import ncdsearch_clustering.old_strategy.Cluster;
 import ncdsearch_clustering.old_strategy.IClusteringStrategy;
 
 public class Longest implements IClusteringStrategy {
@@ -52,8 +51,9 @@ public class Longest implements IClusteringStrategy {
 		List<Cluster> finalCluster = new ArrayList<>();
 
 		for (int i = 0; i < totalVertexNumber; i++) {
-			if (!removedFlagMap[i])
+			if (!removedFlagMap[i]) {
 				finalCluster.add(clusterMap.get(i));
+			}
 		}
 
 		return finalCluster;

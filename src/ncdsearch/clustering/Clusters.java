@@ -22,8 +22,9 @@ public class Clusters {
 	private String distanceAlgorithm;
 	private int topN;
 
-	public Clusters(String strategy, int topN) {
+	public Clusters(String strategy, String distanceAlgorithm, int topN) {
 		this.clustringStrategy = strategy;
+		this.distanceAlgorithm = distanceAlgorithm;
 		this.topN = topN;
 	}
 
@@ -83,7 +84,10 @@ public class Clusters {
 		if (clustringStrategy.equals("DIR") || clustringStrategy.equals("FILE")) {
 			c = new PathClustering(topN, allNode, clustringStrategy);
 
+		} else if (clustringStrategy.equals("SH")) {
+			c = new Shortest(topN, allNode, clustringStrategy);
 		} else {
+			//tmp
 			c = new Shortest(topN, allNode, clustringStrategy);
 		}
 		clusterContents = c.clustering();

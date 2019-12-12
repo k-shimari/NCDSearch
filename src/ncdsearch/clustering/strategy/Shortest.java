@@ -56,14 +56,20 @@ public class Shortest extends Clustering {
 		}
 
 		System.err.println("iterate count : " + idx);
-		List<Cluster> finalCluster = new ArrayList<>();
 
+		List<List<JsonNode>> nodeList = new ArrayList<>();
 		for (int i = 0; i < totalVertexNumber; i++) {
-			if (!removedFlagMap[i])
-				finalCluster.add(clusterMap.get(i));
-		}
+			if (!removedFlagMap[i]) {
+				Cluster c = clusterMap.get(i);
+				List<JsonNode> list = new ArrayList<>();
+				for (Component co : c.getComponents()) {
+					list.add(co.getJsonNode());
+				}
+				nodeList.add(list);
 
-		return finalCluster;
+			}
+		}
+		return nodeList;
 	}
 
 	private List<Cluster> createInitialClusters(List<Component> nodes) {
