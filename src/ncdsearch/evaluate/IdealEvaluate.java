@@ -1,7 +1,7 @@
-package ncdsearch_clustering.evaluate;
+package ncdsearch.evaluate;
 
-import ncdsearch_clustering.clustering.Answers;
-import ncdsearch_clustering.clustering.Clusters;
+import ncdsearch.clustering.Answers;
+import ncdsearch.clustering.Clusters;
 
 public class IdealEvaluate extends Evaluate{
 	public IdealEvaluate(int topN) {

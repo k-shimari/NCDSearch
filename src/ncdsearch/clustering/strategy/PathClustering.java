@@ -1,4 +1,4 @@
-package ncdsearch_clustering.strategy;
+package ncdsearch.clustering.strategy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,7 +7,7 @@ import java.util.Map;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import ncdsearch_clustering.clustering.JsonNodeInfo;
+import ncdsearch.clustering.JsonNodeInfo;
 
 public class PathClustering extends Clustering {
 

@@ -1,10 +1,10 @@
-package ncdsearch_clustering.clustering;
+package ncdsearch.clustering;
 
 import java.io.File;
 import java.nio.file.Paths;
 
-import ncdsearch_clustering.evaluate.Evaluate;
-import ncdsearch_clustering.evaluate.IdealEvaluate;
+import ncdsearch.evaluate.Evaluate;
+import ncdsearch.evaluate.IdealEvaluate;
 
 public class Main {
 	private static String clusteringStrategy = "FILE";

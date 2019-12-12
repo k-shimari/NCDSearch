@@ -1,4 +1,4 @@
-package ncdsearch_clustering.evaluate;
+package ncdsearch.evaluate;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,10 +6,10 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import ncdsearch_clustering.clustering.Answers;
-import ncdsearch_clustering.clustering.Clusters;
-import ncdsearch_clustering.clustering.JsonNodeInfo;
-import ncdsearch_clustering.clustering.JsonNodesInfo;
+import ncdsearch.clustering.Answers;
+import ncdsearch.clustering.Clusters;
+import ncdsearch.clustering.JsonNodeInfo;
+import ncdsearch.clustering.JsonNodesInfo;
 
 public class Evaluate {
 	protected List<Double> reduceWorks = new ArrayList<Double>();

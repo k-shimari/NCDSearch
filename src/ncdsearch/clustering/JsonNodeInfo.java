@@ -1,4 +1,4 @@
-package ncdsearch_clustering.clustering;
+package ncdsearch.clustering;
 
 import com.fasterxml.jackson.databind.JsonNode;
 

@@ -1,4 +1,4 @@
-package ncdsearch_clustering.strategy;
+package ncdsearch.clustering.strategy;
 
 import java.util.List;
 
@@ -19,12 +19,12 @@ public abstract class Clustering {
 	public Clustering(String mode, int topN, List<JsonNode> allNode) {
 		this.strategy = mode;
 		this.topN = topN;
-		this.allNode=allNode;
+		this.allNode = allNode;
 	}
 
 	public Clustering(int topN, List<JsonNode> allNode) {
 		this.topN = topN;
-		this.allNode=allNode;
+		this.allNode = allNode;
 	}
 
 	public abstract List<List<JsonNode>> clustering();

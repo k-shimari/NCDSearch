@@ -1,4 +1,4 @@
-package ncdsearch_clustering.clustering;
+package ncdsearch.clustering;
 import java.io.File;
 import java.io.IOException;
 
