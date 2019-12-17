@@ -112,7 +112,7 @@ public class Evaluate {
 		//		System.out.println("Ave Fvalue: " + sum / totalCall);
 		double precision = (double) totalPFind / totalPAll;
 		double recall = (double) totalRFind / totalRAll;
-		double reduction= 1.0- (double)totalFilteredNode /totalResultNode;
+		double reduction = 1.0 - (double) totalFilteredNode / totalResultNode;
 		System.out.println("Total Reduction rate: " + reduction);
 		System.out.println("Total Precision: " + precision);
 		System.out.println("Total Recall: " + recall);
@@ -125,7 +125,8 @@ public class Evaluate {
 		Clusters fcs = new Clusters();
 		for (List<JsonNode> nodes : cs.getClusterReps()) {
 			List<JsonNode> sortedNodes = JsonNodesInfo.getSortedListbyDistance(nodes);
-			if (isContainInAnswer(nodes, a.getAllNode())) {
+			//if (isContainInAnswer(nodes, a.getAllNode())) {
+			if (isContainMinNode(nodes, cs.getAllNode())) {
 				fcs.addClusterReps(sortedNodes);
 				fcs.addAllNode(cs.getRepJsonMap().get(sortedNodes.get(0)));
 				for (JsonNode node : sortedNodes) {
@@ -146,6 +147,14 @@ public class Evaluate {
 					return true;
 				}
 			}
+		}
+		return false;
+	}
+
+	private boolean isContainMinNode(List<JsonNode> nodes, List<JsonNode> allNode) {
+		for (JsonNode node : nodes) {
+			if (allNode.contains(node))
+				return true;
 		}
 		return false;
 	}
