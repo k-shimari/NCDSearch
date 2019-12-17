@@ -92,7 +92,7 @@ public class Longest extends Clustering {
 			for (int j = 0; j < arraySize; j++) {
 				if (i < j) {
 					Cluster cluster = clusters.get(j);
-					double distance = calcMaxDistance(target, cluster);
+					double distance = calcMinDistance(target, cluster);
 					map.put(j, distance);
 					if (distance < min)
 						min = distance;
@@ -192,8 +192,8 @@ public class Longest extends Clustering {
 		//	return maxDeltaModularity;
 	}
 
-	private double calcMaxDistance(Cluster c1, Cluster c2) {
-		return c1.getMaxDistance(c2);
+	private double calcMinDistance(Cluster c1, Cluster c2) {
+		return c1.getMinDistance(c2);
 	}
 
 }
