@@ -152,11 +152,8 @@ public class Evaluate {
 	}
 
 	private boolean isContainMinNode(List<JsonNode> nodes, List<JsonNode> allNode) {
-		for (JsonNode node : nodes) {
-			if (allNode.contains(node))
-				return true;
-		}
-		return false;
+		JsonNode minNode = JsonNodesInfo.getSortedListbyDistance(allNode).get(0);
+		return nodes.contains(minNode);
 	}
 
 	protected boolean isContainInAnswer(List<JsonNode> nodes, List<JsonNode> answerNodes) {
