@@ -55,6 +55,10 @@ public class Clusters {
 		return clusterReps;
 	}
 
+	public List<List<JsonNode>> getClusterContents() {
+		return clusterContents;
+	}
+
 	public void addClusterReps(List<JsonNode> rep) {
 		clusterReps.add(rep);
 	}
