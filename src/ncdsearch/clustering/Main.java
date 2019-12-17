@@ -46,13 +46,13 @@ public class Main {
 	}
 
 	private static void evaluate(String path, Evaluate e) {
-		for (int ID = 2; ID <= 2; ID++) {
+		for (int ID = 1; ID <= 53; ID++) {
 			System.out.println("------------------");
 			System.out.println("ID:" + ID);
 			String answerJson = Paths.get(path, ("queries.json")).toAbsolutePath().toString();
 			String inputJson = Paths.get(path, ("result/zip-0.5-fast-k0-" + ID + ".json")).toAbsolutePath()
 					.toString();
-			InitJson ij = new InitJson(clusteringStrategy, distanceAlgorithm, TOPN,CLUSTER_NUM);
+			InitJson ij = new InitJson(clusteringStrategy, distanceAlgorithm, TOPN, CLUSTER_NUM);
 			Clusters cs = ij.converttoClusters(new File(inputJson));
 			Answers a = ij.converttoAnswer(new File(answerJson), String.valueOf(ID));
 
@@ -69,7 +69,7 @@ public class Main {
 			String answerJson = Paths.get(path, ("queries.json")).toAbsolutePath().toString();
 			String inputJson = Paths.get(path, ("result/zip-0.5-fast-k0-" + ID + ".json")).toAbsolutePath()
 					.toString();
-			InitJson ij = new InitJson(clusteringStrategy, distanceAlgorithm, TOPN,CLUSTER_NUM);
+			InitJson ij = new InitJson(clusteringStrategy, distanceAlgorithm, TOPN, CLUSTER_NUM);
 			Clusters cs = ij.converttoClusters(new File(inputJson));
 			Answers a = ij.converttoAnswer(new File(answerJson), String.valueOf(ID));
 
@@ -79,10 +79,9 @@ public class Main {
 
 	private static void output(Clusters cs) {
 		OutputClusters o = new OutputClusters(cs);
-		o.output();
+		//o.output();
+		o.outputSorted();
 	}
-
-
 
 	private static void printLogs(Evaluate e) {
 		System.out.println("------------------");
