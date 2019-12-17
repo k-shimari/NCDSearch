@@ -14,11 +14,11 @@ public class Shortest extends Clustering {
 	private TIntDoubleHashMap minDistanceMap;
 	private TIntObjectHashMap<Cluster> clusterMap;
 
-	private static final int CLUSTERNUM = 5;
+	private int clusterNum;
 	private int totalVertexNumber;
 	private boolean[] removedFlagMap;
 
-	public Shortest(int topN, List<JsonNode> allNode, String strategy) {
+	public Shortest(int topN, List<JsonNode> allNode, String strategy, int clusterNum) {
 		super(topN, allNode, strategy);
 		totalVertexNumber = 0;
 	}
@@ -41,7 +41,7 @@ public class Shortest extends Clustering {
 		int mapSize = totalVertexNumber;
 		System.err.println("initial clusters : " + mapSize);
 		int idx = 0;
-		while (mapSize > CLUSTERNUM) {
+		while (mapSize > clusterNum) {
 			idx++;
 			update();
 			int count = 0;

@@ -18,7 +18,7 @@ public class NgramDistance implements ICodeDistanceStrategy {
 	}
 
 	public NgramDistance(int n) {
-
+		this.n = n;
 	}
 
 	static TLongArrayList createNgram(byte[] buf, int n) {

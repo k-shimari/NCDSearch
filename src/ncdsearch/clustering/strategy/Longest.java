@@ -15,11 +15,13 @@ public class Longest extends Clustering {
 	private TIntObjectHashMap<Cluster> clusterMap;
 	private int totalVertexNumber;
 	private boolean[] removedFlagMap;
+	private int clusterNum;
 	//	private boolean[][] removedEdgeFlagMap;
 
-	public Longest(int topN, List<JsonNode> allNode, String strategy) {
+	public Longest(int topN, List<JsonNode> allNode, String strategy, int clusterNum) {
 		super(topN, allNode, strategy);
 		totalVertexNumber = 0;
+		this.clusterNum=clusterNum;
 	}
 
 	@Override
@@ -40,7 +42,7 @@ public class Longest extends Clustering {
 		int mapSize = totalVertexNumber;
 		System.err.println("initial clusters : " + mapSize);
 		int idx = 0;
-		while (mapSize > 5) {
+		while (mapSize > clusterNum) {
 			idx++;
 			update();
 			int count = 0;

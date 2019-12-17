@@ -23,11 +23,13 @@ public class Clusters {
 	private String clustringStrategy;
 	private String distanceAlgorithm;
 	private int topN;
+	private int clusterNum;
 
-	public Clusters(String strategy, String distanceAlgorithm, int topN) {
+	public Clusters(String strategy, String distanceAlgorithm, int topN, int clusterNum) {
 		this.clustringStrategy = strategy;
 		this.distanceAlgorithm = distanceAlgorithm;
 		this.topN = topN;
+		this.clusterNum = clusterNum;
 	}
 
 	public Clusters() {
@@ -87,14 +89,14 @@ public class Clusters {
 			c = new PathClustering(topN, allNode, clustringStrategy);
 
 		} else if (clustringStrategy.equals("SH")) {
-			c = new Shortest(topN, allNode, distanceAlgorithm);
+			c = new Shortest(topN, allNode, distanceAlgorithm, clusterNum);
 		} else if (clustringStrategy.equals("LO")) {
-			c = new Longest(topN, allNode, distanceAlgorithm);
+			c = new Longest(topN, allNode, distanceAlgorithm, clusterNum);
 		} else if (clustringStrategy.equals("NF")) {
 			c = new NewmanFast(topN, allNode, distanceAlgorithm);
 		} else {
 			//tmp
-			c = new Shortest(topN, allNode, distanceAlgorithm);
+			c = new Shortest(topN, allNode, distanceAlgorithm, clusterNum);
 		}
 		clusterContents = c.clustering();
 	}

@@ -13,15 +13,17 @@ public class InitJson {
 	private String clusteringStrategy;
 	private String distanceAlgorithm;
 	private int topN;
+	private int clusterNum;
 
-	public InitJson(String clusteringStrategy, String distanceAlgorithm, int topN) {
+	public InitJson(String clusteringStrategy, String distanceAlgorithm, int topN, int clusterNum) {
 		this.clusteringStrategy = clusteringStrategy;
-		this.distanceAlgorithm=distanceAlgorithm;
+		this.distanceAlgorithm = distanceAlgorithm;
 		this.topN = topN;
+		this.clusterNum = clusterNum;
 	}
 
 	public Clusters converttoClusters(File file) {
-		Clusters cs = new Clusters(clusteringStrategy, distanceAlgorithm, topN);
+		Clusters cs = new Clusters(clusteringStrategy, distanceAlgorithm, topN, clusterNum);
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			JsonNode root = mapper.readTree(file);
