@@ -14,7 +14,7 @@ public class Shortest extends Clustering {
 	private TIntDoubleHashMap minDistanceMap;
 	private TIntObjectHashMap<Cluster> clusterMap;
 
-	private static final int CLUSTERNUM = 20;
+	private static final int CLUSTERNUM = 5;
 	private int totalVertexNumber;
 	private boolean[] removedFlagMap;
 
@@ -112,9 +112,6 @@ public class Shortest extends Clustering {
 		}
 	}
 
-	/**
-	 * To be fixed
-	 */
 	private void setMinDistance() {
 		for (int i = 0; i < totalVertexNumber; i++) {
 			if (!removedFlagMap[i]) {
@@ -138,6 +135,7 @@ public class Shortest extends Clustering {
 		double minDistance = Double.MAX_VALUE;
 		int minI = -1;
 
+		/*get the most minimum node-node from minD map*/
 		for (int i = 0; i < totalVertexNumber; i++) {
 			if (!removedFlagMap[i]) {
 				double distance = minDistanceMap.get(i);
@@ -179,15 +177,6 @@ public class Shortest extends Clustering {
 		//				System.err.print(maxDeltaModularityMap.get(i) + " ");
 		//			}
 		//			System.err.println();
-		for (int i = 0; i < totalVertexNumber; i++) {
-			if (!removedFlagMap[i]) {
-				double distance = minDistanceMap.get(i);
-				if (distance < minDistance) {
-					minDistance = distance;
-				}
-			}
-		}
-		//	return maxDeltaModularity;
 	}
 
 	private double calcMinDistance(Cluster c1, Cluster c2) {

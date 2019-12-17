@@ -184,6 +184,7 @@ public class Evaluate {
 		System.out.println("Reduction rate: " + reduceWork);
 	}
 
+	//TODO fix at denominator
 	public void calcPrecision(Clusters fcs, Answers a) {
 		int size = 0;
 		for (JsonNode node : fcs.getAllNode()) {
