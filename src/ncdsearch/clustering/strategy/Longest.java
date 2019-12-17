@@ -21,7 +21,7 @@ public class Longest extends Clustering {
 	public Longest(int topN, List<JsonNode> allNode, String strategy, int clusterNum) {
 		super(topN, allNode, strategy);
 		totalVertexNumber = 0;
-		this.clusterNum=clusterNum;
+		this.clusterNum = clusterNum;
 	}
 
 	@Override

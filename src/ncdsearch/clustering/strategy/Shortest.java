@@ -21,6 +21,7 @@ public class Shortest extends Clustering {
 	public Shortest(int topN, List<JsonNode> allNode, String strategy, int clusterNum) {
 		super(topN, allNode, strategy);
 		totalVertexNumber = 0;
+		this.clusterNum=clusterNum;
 	}
 
 	@Override
