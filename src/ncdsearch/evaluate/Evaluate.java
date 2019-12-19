@@ -33,6 +33,10 @@ public class Evaluate {
 		this.topN = topN;
 	}
 
+	public void setTopN(int topN) {
+		this.topN = topN;
+	}
+
 	public void evaluate(Clusters cs, Answers a) {
 		totalCall++;
 		nonAnswerRepSize = 0;
@@ -133,7 +137,7 @@ public class Evaluate {
 					fcs.putRepJsonMap(node, cs.getRepJsonMap().get(node));
 				}
 			} else {
-				nonAnswerRepSize += sortedNodes.size();
+				//nonAnswerRepSize += sortedNodes.size();
 			}
 		}
 		return fcs;
@@ -152,8 +156,14 @@ public class Evaluate {
 	}
 
 	private boolean isContainMinNode(List<JsonNode> nodes, List<JsonNode> allNode) {
-		JsonNode minNode = JsonNodesInfo.getSortedListbyDistance(allNode).get(0);
-		return nodes.contains(minNode);
+		for (int i = 0; i < this.topN; i++) {
+			JsonNode minNode = JsonNodesInfo.getSortedListbyDistance(allNode).get(i);
+			if (nodes.contains(minNode))
+				return true;
+			;
+		}
+
+		return false;
 	}
 
 	protected boolean isContainInAnswer(List<JsonNode> nodes, List<JsonNode> answerNodes) {

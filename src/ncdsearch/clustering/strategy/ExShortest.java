@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import gnu.trove.map.hash.TIntDoubleHashMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 
-public class Shortest extends Clustering {
+public class ExShortest extends Clustering {
 	private TIntObjectHashMap<TIntDoubleHashMap> distanceMap;
 	private TIntDoubleHashMap minDistanceMap;
 	private TIntObjectHashMap<Cluster> clusterMap;
@@ -18,7 +18,7 @@ public class Shortest extends Clustering {
 	private int totalVertexNumber;
 	private boolean[] removedFlagMap;
 
-	public Shortest(int topN, List<JsonNode> allNode, String strategy, int clusterNum) {
+	public ExShortest(int topN, List<JsonNode> allNode, String strategy, int clusterNum) {
 		super(topN, allNode, strategy);
 		totalVertexNumber = 0;
 		this.clusterNum = clusterNum;
@@ -41,20 +41,12 @@ public class Shortest extends Clustering {
 			components.add(new Component(node, strategy));
 		}
 		createInitialClusters(components);
-		int mapSize = totalVertexNumber;
-		System.err.println("initial clusters : " + mapSize);
+		double minDistance = Double.MAX_VALUE - 1;
 		int idx = 0;
-		while (mapSize > clusterNum) {
+		//	while (mapSize > clusterNum) {
+		while (minDistance <= 0.2) {
 			idx++;
-			update();
-			int count = 0;
-			for (boolean flag : removedFlagMap) {
-				if (!flag)
-					count++;
-			}
-			mapSize = count;
-			//				System.err.println("before : " + beforeMax);
-			//				System.err.println("current : " + maxDeltaModularity);
+			minDistance = update();
 		}
 
 		System.err.println("iterate count : " + idx);
@@ -133,7 +125,7 @@ public class Shortest extends Clustering {
 		}
 	}
 
-	private void update() {
+	private double update() {
 		//			System.err.println("[UPDATE]");
 		double minDistance = Double.MAX_VALUE;
 		int minI = -1;
@@ -180,6 +172,15 @@ public class Shortest extends Clustering {
 		//				System.err.print(maxDeltaModularityMap.get(i) + " ");
 		//			}
 		//			System.err.println();
+		for (int i = 0; i < totalVertexNumber; i++) {
+			if (!removedFlagMap[i]) {
+				double distance = minDistanceMap.get(i);
+				if (distance < minDistance) {
+					minDistance = distance;
+				}
+			}
+		}
+		return minDistance;
 	}
 
 	private double calcMinDistance(Cluster c1, Cluster c2) {
