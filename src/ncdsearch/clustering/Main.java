@@ -51,16 +51,16 @@ public class Main {
 			System.out.println("ID:" + ID);
 			String answerJson = Paths.get(path, ("queries.json")).toAbsolutePath().toString();
 			String inputJson = Paths.get(path, ("result/zip-0.5-fast-k0-" + ID + ".json")).toAbsolutePath()
-			//String inputJson = Paths.get(path, ("result/lzjd-0.5-fast-k0-" + ID + ".json")).toAbsolutePath()
+					//String inputJson = Paths.get(path, ("result/lzjd-0.5-fast-k0-" + ID + ".json")).toAbsolutePath()
 					.toString();
 			InitJson ij = new InitJson(clusteringStrategy, distanceAlgorithm, TOPN, CLUSTER_NUM);
 			Clusters cs = ij.converttoClusters(new File(inputJson));
 			Answers a = ij.converttoAnswer(new File(answerJson), String.valueOf(ID));
 
 			output(cs);
-			e.setTopN(Math.min(10, cs.getClusterRepsSize() / 2 + 1));
+			//e.setTopN(Math.min(10, cs.getClusterRepsSize() / 2 + 1));
 			//if(cs.getNodeSize()>10)
-				e.evaluate(cs, a);
+			e.evaluate(cs, a);
 		}
 	}
 

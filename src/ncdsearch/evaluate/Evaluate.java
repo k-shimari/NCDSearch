@@ -45,6 +45,7 @@ public class Evaluate {
 		System.out.println("TotalNode: " + cs.getNodeSize());
 		System.out.println("TotalDir: " + cs.getClusterRepsSize());
 		System.out.println("-------");
+		printAnswerRank(cs, a);
 
 		//		cs.getRepJsonMap().keySet().forEach(s -> {
 		//
@@ -68,6 +69,15 @@ public class Evaluate {
 		calcPrecision(fcs, a);
 		calcRecall(fcs, a);
 		//calcFvalue();
+	}
+
+	private void printAnswerRank(Clusters cs, Answers a) {
+		List<JsonNode> sortedList = JsonNodesInfo.getSortedListbyDistance(cs.getAllNode());
+		for (int i = 0; i < sortedList.size(); i++) {
+			if (isContainInAnswer(sortedList.get(i), a.getAllNode())) {
+				System.out.println("Rank: " + (i+1));
+			}
+		}
 	}
 
 	public void printAll() {
@@ -155,17 +165,6 @@ public class Evaluate {
 		return false;
 	}
 
-	private boolean isContainMinNode(List<JsonNode> nodes, List<JsonNode> allNode) {
-		for (int i = 0; i < this.topN; i++) {
-			JsonNode minNode = JsonNodesInfo.getSortedListbyDistance(allNode).get(i);
-			if (nodes.contains(minNode))
-				return true;
-			;
-		}
-
-		return false;
-	}
-
 	protected boolean isContainInAnswer(List<JsonNode> nodes, List<JsonNode> answerNodes) {
 		for (JsonNode aNode : answerNodes) {
 			for (JsonNode node : nodes) {
@@ -177,6 +176,17 @@ public class Evaluate {
 				}
 			}
 		}
+		return false;
+	}
+
+	private boolean isContainMinNode(List<JsonNode> nodes, List<JsonNode> allNode) {
+		for (int i = 0; i < this.topN; i++) {
+			JsonNode minNode = JsonNodesInfo.getSortedListbyDistance(allNode).get(i);
+			if (nodes.contains(minNode))
+				return true;
+			;
+		}
+
 		return false;
 	}
 
