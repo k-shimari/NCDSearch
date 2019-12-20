@@ -8,6 +8,7 @@ import java.util.Map;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import ncdsearch.clustering.strategy.Clustering;
+import ncdsearch.clustering.strategy.ExShortest;
 import ncdsearch.clustering.strategy.Longest;
 import ncdsearch.clustering.strategy.NewmanFast;
 import ncdsearch.clustering.strategy.PathClustering;
@@ -91,16 +92,16 @@ public class Clusters {
 		Clustering c;
 		if (clustringStrategy.equals("DIR") || clustringStrategy.equals("FILE")) {
 			c = new PathClustering(topN, allNode, clustringStrategy);
-
 		} else if (clustringStrategy.equals("SH")) {
 			c = new Shortest(topN, allNode, distanceAlgorithm, clusterNum);
 		} else if (clustringStrategy.equals("LO")) {
 			c = new Longest(topN, allNode, distanceAlgorithm, clusterNum);
 		} else if (clustringStrategy.equals("NF")) {
 			c = new NewmanFast(topN, allNode, distanceAlgorithm);
+		} else if (clustringStrategy.equals("ExSH")) {
+			c = new ExShortest(topN, allNode, distanceAlgorithm, clusterNum);
 		} else {
-			//tmp
-			c = new Shortest(topN, allNode, distanceAlgorithm, clusterNum);
+			c = new ExShortest(topN, allNode, distanceAlgorithm, clusterNum);
 		}
 		clusterContents = c.clustering();
 	}

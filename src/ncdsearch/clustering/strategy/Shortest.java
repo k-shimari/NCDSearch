@@ -10,37 +10,22 @@ import gnu.trove.map.hash.TIntDoubleHashMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 
 public class Shortest extends Clustering {
-	private TIntObjectHashMap<TIntDoubleHashMap> distanceMap;
-	private TIntDoubleHashMap minDistanceMap;
-	private TIntObjectHashMap<Cluster> clusterMap;
+	protected TIntObjectHashMap<TIntDoubleHashMap> distanceMap;
+	protected TIntDoubleHashMap minDistanceMap;
+	protected TIntObjectHashMap<Cluster> clusterMap;
 
-	private int clusterNum;
-	private int totalVertexNumber;
-	private boolean[] removedFlagMap;
+	protected int clusterNum;
+	protected int totalVertexNumber;
+	protected boolean[] removedFlagMap;
 
 	public Shortest(int topN, List<JsonNode> allNode, String strategy, int clusterNum) {
 		super(topN, allNode, strategy);
-		totalVertexNumber = 0;
 		this.clusterNum = clusterNum;
 	}
 
 	@Override
 	public List<List<JsonNode>> clustering() {
-		distanceMap = new TIntObjectHashMap<>();
-		minDistanceMap = new TIntDoubleHashMap();
-		clusterMap = new TIntObjectHashMap<>();
-
-		totalVertexNumber = allNode.size();
-		//this.clusterNum = allNode.size() / 5 + 1;
-
-		removedFlagMap = new boolean[totalVertexNumber];
-		Arrays.fill(removedFlagMap, false);
-
-		List<Component> components = new ArrayList<>();
-		for (JsonNode node : allNode) {
-			components.add(new Component(node, strategy));
-		}
-		createInitialClusters(components);
+		init();
 		int mapSize = totalVertexNumber;
 		System.err.println("initial clusters : " + mapSize);
 		int idx = 0;
@@ -74,7 +59,27 @@ public class Shortest extends Clustering {
 		return nodeList;
 	}
 
-	private List<Cluster> createInitialClusters(List<Component> nodes) {
+	protected void init() {
+		distanceMap = new TIntObjectHashMap<>();
+		minDistanceMap = new TIntDoubleHashMap();
+		clusterMap = new TIntObjectHashMap<>();
+
+		totalVertexNumber = allNode.size();
+		//this.clusterNum = allNode.size() / 5 + 1;
+
+		removedFlagMap = new boolean[totalVertexNumber];
+		Arrays.fill(removedFlagMap, false);
+
+		List<Component> components = new ArrayList<>();
+		for (JsonNode node : allNode) {
+			components.add(new Component(node, strategy));
+		}
+		createInitialClusters(components);
+	}
+
+
+
+	protected List<Cluster> createInitialClusters(List<Component> nodes) {
 		List<Cluster> clusters = new ArrayList<>();
 		int index = 0;
 		for (Component node : nodes) {
@@ -86,7 +91,7 @@ public class Shortest extends Clustering {
 		return clusters;
 	}
 
-	private void calcInitialDistances(List<Cluster> clusters) {
+	protected void calcInitialDistances(List<Cluster> clusters) {
 		int arraySize = clusters.size();
 		for (int i = 0; i < arraySize; i++) {
 			Cluster target = clusters.get(i);
@@ -133,7 +138,7 @@ public class Shortest extends Clustering {
 		}
 	}
 
-	private void update() {
+	protected void update() {
 		//			System.err.println("[UPDATE]");
 		double minDistance = Double.MAX_VALUE;
 		int minI = -1;
@@ -182,7 +187,7 @@ public class Shortest extends Clustering {
 		//			System.err.println();
 	}
 
-	private double calcMinDistance(Cluster c1, Cluster c2) {
+	protected double calcMinDistance(Cluster c1, Cluster c2) {
 		return c1.getMinDistance(c2);
 	}
 

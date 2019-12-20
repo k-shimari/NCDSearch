@@ -11,8 +11,8 @@ import ncdsearch.evaluate.Evaluate;
 import ncdsearch.evaluate.IdealEvaluate;
 
 public class Main {
-	private static String clusteringStrategy = "SH";
-	private static String distanceAlgorithm = "vntld";
+	private static String clusteringStrategy = "ExSH";
+	private static String distanceAlgorithm = "ncd";
 	private static final int TOPN = 10;
 	private static final int CLUSTER_NUM = 10;
 
@@ -50,8 +50,8 @@ public class Main {
 			System.out.println("------------------");
 			System.out.println("ID:" + ID);
 			String answerJson = Paths.get(path, ("queries.json")).toAbsolutePath().toString();
-			//String inputJson = Paths.get(path, ("result/zip-0.5-fast-k0-" + ID + ".json")).toAbsolutePath()
-			String inputJson = Paths.get(path, ("result/lzjd-0.5-fast-k0-" + ID + ".json")).toAbsolutePath()
+			String inputJson = Paths.get(path, ("result/zip-0.5-fast-k0-" + ID + ".json")).toAbsolutePath()
+			//String inputJson = Paths.get(path, ("result/lzjd-0.5-fast-k0-" + ID + ".json")).toAbsolutePath()
 					.toString();
 			InitJson ij = new InitJson(clusteringStrategy, distanceAlgorithm, TOPN, CLUSTER_NUM);
 			Clusters cs = ij.converttoClusters(new File(inputJson));
@@ -59,7 +59,8 @@ public class Main {
 
 			output(cs);
 			//e.setTopN(Math.min(5, cs.getNodeSize() / 10 + 1));
-			e.evaluate(cs, a);
+			//if(cs.getNodeSize()>10)
+				e.evaluate(cs, a);
 		}
 	}
 
