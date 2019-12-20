@@ -11,7 +11,7 @@ import ncdsearch.evaluate.Evaluate;
 import ncdsearch.evaluate.IdealEvaluate;
 
 public class Main {
-	private static String clusteringStrategy = "ExSH";
+	private static String clusteringStrategy = "EXLO";
 	private static String distanceAlgorithm = "ncd";
 	private static final int TOPN = 10;
 	private static final int CLUSTER_NUM = 10;

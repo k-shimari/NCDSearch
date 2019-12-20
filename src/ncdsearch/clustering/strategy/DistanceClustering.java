@@ -175,6 +175,19 @@ public abstract class DistanceClustering extends Clustering {
 		setMinDistance();
 	}
 
+	protected double getMinDistance() {
+		double minDistance = Double.MAX_VALUE;
+		for (int i = 0; i < totalVertexNumber; i++) {
+			if (!removedFlagMap[i]) {
+				double distance = minDistanceMap.get(i);
+				if (distance < minDistance) {
+					minDistance = distance;
+				}
+			}
+		}
+		return minDistance;
+	}
+
 	protected abstract double calcDistance(Cluster c1, Cluster c2) ;
 
 }

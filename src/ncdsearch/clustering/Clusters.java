@@ -8,6 +8,7 @@ import java.util.Map;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import ncdsearch.clustering.strategy.Clustering;
+import ncdsearch.clustering.strategy.ExLongest;
 import ncdsearch.clustering.strategy.ExShortest;
 import ncdsearch.clustering.strategy.Longest;
 import ncdsearch.clustering.strategy.NewmanFast;
@@ -98,8 +99,10 @@ public class Clusters {
 			c = new Longest(topN, allNode, distanceAlgorithm, clusterNum);
 		} else if (clustringStrategy.equals("NF")) {
 			c = new NewmanFast(topN, allNode, distanceAlgorithm);
-		} else if (clustringStrategy.equals("ExSH")) {
+		} else if (clustringStrategy.equals("EXSH")) {
 			c = new ExShortest(topN, allNode, distanceAlgorithm, clusterNum);
+		} else if (clustringStrategy.equals("EXLO")) {
+			c = new ExLongest(topN, allNode, distanceAlgorithm, clusterNum);
 		} else {
 			c = new ExShortest(topN, allNode, distanceAlgorithm, clusterNum);
 		}
