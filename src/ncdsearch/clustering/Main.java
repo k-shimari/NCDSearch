@@ -11,10 +11,10 @@ import ncdsearch.evaluate.Evaluate;
 import ncdsearch.evaluate.IdealEvaluate;
 
 public class Main {
-	private static String clusteringStrategy = "EXLO";
+	private static String clusteringStrategy = "EXSH";
 	private static String distanceAlgorithm = "ncd";
 	private static final int TOPN = 10;
-	private static final int CLUSTER_NUM = 10;
+	private static final int CLUSTER_NUM = 1000;
 
 	public static void main(String[] args) {
 		try {
@@ -58,7 +58,7 @@ public class Main {
 			Answers a = ij.converttoAnswer(new File(answerJson), String.valueOf(ID));
 
 			output(cs);
-			//e.setTopN(Math.min(5, cs.getNodeSize() / 10 + 1));
+			e.setTopN(Math.min(10, cs.getClusterRepsSize() / 2 + 1));
 			//if(cs.getNodeSize()>10)
 				e.evaluate(cs, a);
 		}

@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-public class ExLongest extends Longest{
+public class ExLongest extends Longest {
 	private static final double threshold = 0.2;
 
 	public ExLongest(int topN, List<JsonNode> allNode, String strategy, int clusterNum) {
@@ -24,7 +24,7 @@ public class ExLongest extends Longest{
 			minDistance = getMinDistance();
 		}
 
-		System.err.println("iterate count : " + idx);
+		System.err.println("iterate count : " + (idx - 1));
 		return getNodeList();
 	}
 

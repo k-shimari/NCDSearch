@@ -138,43 +138,6 @@ public abstract class DistanceClustering extends Clustering {
 		}
 	}
 
-	protected void update() {
-		//			System.err.println("[UPDATE]");
-		double minDistance = Double.MAX_VALUE;
-		int minI = -1;
-
-		/*get the most minimum node-node from minD map*/
-		for (int i = 0; i < totalVertexNumber; i++) {
-			if (!removedFlagMap[i]) {
-				double distance = minDistanceMap.get(i);
-				if (distance < minDistance) {
-					minDistance = distance;
-					minI = i;
-				}
-			}
-		}
-		int minJ = -1;
-		TIntDoubleHashMap iMap = distanceMap.get(minI);
-
-		for (int j = 0; j < totalVertexNumber; j++) {
-			if (!removedFlagMap[j] && j != minI && minDistance == iMap.get(j)) {
-				minJ = j;
-			}
-		}
-		TIntDoubleHashMap jMap = distanceMap.get(minJ);
-		for (int k = 0; k < totalVertexNumber; k++) {
-			if (!removedFlagMap[k] && k != minI && k != minJ) {
-				jMap.put(k, Math.min(iMap.get(k), jMap.get(k)));
-			}
-		}
-		/*remove clusterI and combine I to J as J*/
-		distanceMap.put(minJ, jMap);
-		clusterMap.get(minJ).combine(clusterMap.get(minI));
-		removedFlagMap[minI] = true;
-
-		setMinDistance();
-	}
-
 	protected double getMinDistance() {
 		double minDistance = Double.MAX_VALUE;
 		for (int i = 0; i < totalVertexNumber; i++) {
@@ -188,6 +151,7 @@ public abstract class DistanceClustering extends Clustering {
 		return minDistance;
 	}
 
+	protected abstract void update() ;
 	protected abstract double calcDistance(Cluster c1, Cluster c2) ;
 
 }

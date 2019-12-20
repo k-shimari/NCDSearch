@@ -25,7 +25,7 @@ public class ExShortest extends Shortest {
 			minDistance = getMinDistance();
 		}
 
-		System.err.println("iterate count : " + idx);
+		System.err.println("iterate count : " + (idx - 1));
 		return getNodeList();
 	}
 }
