@@ -1,13 +1,12 @@
 package ncdsearch.clustering.strategy;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
 public class ExShortest extends Shortest {
 
-	private static final double threshold = 0.25;
+	private static final double threshold = 0.3;
 
 	public ExShortest(int topN, List<JsonNode> allNode, String strategy, int clusterNum) {
 		super(topN, allNode, strategy, clusterNum);
@@ -27,20 +26,9 @@ public class ExShortest extends Shortest {
 		}
 
 		System.err.println("iterate count : " + idx);
-
-		List<List<JsonNode>> nodeList = new ArrayList<>();
-		for (int i = 0; i < totalVertexNumber; i++) {
-			if (!removedFlagMap[i]) {
-				Cluster c = clusterMap.get(i);
-				List<JsonNode> list = new ArrayList<>();
-				for (Component co : c.getComponents()) {
-					list.add(co.getJsonNode());
-				}
-				nodeList.add(list);
-			}
-		}
-		return nodeList;
+		return getNodeList();
 	}
+
 
 	private double getMinDistance() {
 		double minDistance = Double.MAX_VALUE;
