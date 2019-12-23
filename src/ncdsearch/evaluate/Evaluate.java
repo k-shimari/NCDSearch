@@ -139,15 +139,15 @@ public class Evaluate {
 		Clusters fcs = new Clusters();
 		for (List<JsonNode> nodes : cs.getClusterReps()) {
 			List<JsonNode> sortedNodes = JsonNodesInfo.getSortedListbyDistance(nodes);
-			//if (isContainInAnswer(nodes, a.getAllNode())) {
-			if (isContainMinNode(nodes, cs.getAllNode())) {
+			if (isContainInAnswer(nodes, a.getAllNode())) {
+			//if (isContainMinNode(nodes, cs.getAllNode())) {
 				fcs.addClusterReps(sortedNodes);
 				fcs.addAllNode(cs.getRepJsonMap().get(sortedNodes.get(0)));
 				for (JsonNode node : sortedNodes) {
 					fcs.putRepJsonMap(node, cs.getRepJsonMap().get(node));
 				}
 			} else {
-				//nonAnswerRepSize += sortedNodes.size();
+				nonAnswerRepSize += sortedNodes.size();
 			}
 		}
 		return fcs;
