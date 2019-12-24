@@ -11,9 +11,9 @@ import ncdsearch.evaluate.Evaluate;
 import ncdsearch.evaluate.IdealEvaluate;
 
 public class Main {
-	private static String clusteringStrategy = "EXGA";
+	private static String clusteringStrategy = "EXSH";
 	private static String distanceAlgorithm = "ncd";
-	private static final int TOPN = 3;
+	private static final int TOPN = 10;
 	private static final int CLUSTER_NUM = 5;
 
 	public static void main(String[] args) {
@@ -50,7 +50,7 @@ public class Main {
 			System.out.println("------------------");
 			System.out.println("ID:" + ID);
 			String answerJson = Paths.get(path, ("queries.json")).toAbsolutePath().toString();
-			String inputJson = Paths.get(path, ("result/zip-0.5-fast-k0-" + ID + ".json")).toAbsolutePath()
+			String inputJson = Paths.get(path, ("result/lzjd-0.5-fast-k0-" + ID + ".json")).toAbsolutePath()
 					//String inputJson = Paths.get(path, ("result/lzjd-0.5-fast-k0-" + ID + ".json")).toAbsolutePath()
 					.toString();
 			InitJson ij = new InitJson(clusteringStrategy, distanceAlgorithm, TOPN, CLUSTER_NUM);
