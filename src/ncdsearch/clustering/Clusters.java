@@ -7,10 +7,8 @@ import java.util.Map;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import ncdsearch.clustering.strategy.Average;
 import ncdsearch.clustering.strategy.Clustering;
-import ncdsearch.clustering.strategy.ExGroupAverage;
-import ncdsearch.clustering.strategy.ExLongest;
-import ncdsearch.clustering.strategy.ExShortest;
 import ncdsearch.clustering.strategy.GroupAverage;
 import ncdsearch.clustering.strategy.Longest;
 import ncdsearch.clustering.strategy.NewmanFast;
@@ -93,25 +91,36 @@ public class Clusters {
 
 	public void clustering() {
 		Clustering c;
-		if (clustringStrategy.equals("DIR") || clustringStrategy.equals("FILE")) {
-			c = new PathClustering(topN, allNode, clustringStrategy);
-		} else if (clustringStrategy.equals("SH")) {
-			c = new Shortest(topN, allNode, distanceAlgorithm, clusterNum);
-		} else if (clustringStrategy.equals("LO")) {
-			c = new Longest(topN, allNode, distanceAlgorithm, clusterNum);
-		} else if (clustringStrategy.equals("GA")) {
-			c = new GroupAverage(topN, allNode, distanceAlgorithm, clusterNum);
-		} else if (clustringStrategy.equals("NF")) {
-			c = new NewmanFast(topN, allNode, distanceAlgorithm);
-		} else if (clustringStrategy.equals("EXSH")) {
-			c = new ExShortest(topN, allNode, distanceAlgorithm, clusterNum);
-		} else if (clustringStrategy.equals("EXLO")) {
-			c = new ExLongest(topN, allNode, distanceAlgorithm, clusterNum);
-		} else if (clustringStrategy.equals("EXGA")) {
-			c = new ExGroupAverage(topN, allNode, distanceAlgorithm, clusterNum);
+		if (clustringStrategy.startsWith("EX")) {
+			if (clustringStrategy.equals("EXSH")) {
+				c = new Shortest(topN, allNode, distanceAlgorithm, clusterNum);
+			} else if (clustringStrategy.equals("EXLO")) {
+				c = new Longest(topN, allNode, distanceAlgorithm, clusterNum);
+			} else if (clustringStrategy.equals("EXGA")) {
+				c = new GroupAverage(topN, allNode, distanceAlgorithm, clusterNum);
+			} else if (clustringStrategy.equals("EXAV")) {
+				c = new Average(topN, allNode, distanceAlgorithm, clusterNum);
+			} else {
+				c = new Shortest(topN, allNode, distanceAlgorithm, clusterNum);
+			}
+			clusterContents = c.exClustering();
 		} else {
-			c = new ExShortest(topN, allNode, distanceAlgorithm, clusterNum);
+			if (clustringStrategy.equals("DIR") || clustringStrategy.equals("FILE")) {
+				c = new PathClustering(topN, allNode, clustringStrategy);
+			} else if (clustringStrategy.equals("SH")) {
+				c = new Shortest(topN, allNode, distanceAlgorithm, clusterNum);
+			} else if (clustringStrategy.equals("LO")) {
+				c = new Longest(topN, allNode, distanceAlgorithm, clusterNum);
+			} else if (clustringStrategy.equals("GA")) {
+				c = new GroupAverage(topN, allNode, distanceAlgorithm, clusterNum);
+			} else if (clustringStrategy.equals("AV")) {
+				c = new Average(topN, allNode, distanceAlgorithm, clusterNum);
+			} else if (clustringStrategy.equals("NF")) {
+				c = new NewmanFast(topN, allNode, distanceAlgorithm);
+			} else {
+				c = new Shortest(topN, allNode, distanceAlgorithm, clusterNum);
+			}
+			clusterContents = c.clustering();
 		}
-		clusterContents = c.clustering();
 	}
 }

@@ -75,6 +75,11 @@ public class NewmanFast extends Clustering {
 		return nodeList;
 	}
 
+	@Override
+	public List<List<JsonNode>> exClustering() {
+		return clustering();
+	}
+
 	private List<Cluster> createInitialClusters(List<Component> fragments) {
 		List<Cluster> clusters = new ArrayList<>();
 		int index = 0;

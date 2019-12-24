@@ -33,4 +33,9 @@ public class PathClustering extends Clustering {
 		}
 		return new ArrayList<>(pathJsonMap.values());
 	}
+
+	@Override
+	public List<List<JsonNode>> exClustering() {
+		return clustering();
+	}
 }
