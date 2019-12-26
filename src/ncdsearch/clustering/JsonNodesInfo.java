@@ -1,4 +1,5 @@
 package ncdsearch.clustering;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -79,13 +80,30 @@ public class JsonNodesInfo {
 		return getSortedListbyDistance(repNodelist);
 	}
 
-
-
 	/*ascending order*/
 	public static List<JsonNode> getSortedListbyDistance(List<JsonNode> nodes) {
-		Collections.sort(nodes,
-				(p1, p2) -> Double.compare(p1.get("Distance").asDouble(), p2.get("Distance").asDouble()));
+		Collections.sort(nodes, (p1, p2) -> isBetterThan(p1, p2));
 		return nodes;
+	}
+
+	public static int isBetterThan(JsonNode one, JsonNode another) {
+		// Distance: Lower is better
+		if (JsonNodeInfo.getNodeDistance(one) > JsonNodeInfo.getNodeDistance(another))
+			return 1;
+		if (JsonNodeInfo.getNodeDistance(one) < JsonNodeInfo.getNodeDistance(another))
+			return -1;
+		else {
+			// Shorter is better
+			int onelen = JsonNodeInfo.getNodeEndChar(one) - JsonNodeInfo.getNodeStartChar(one);
+			int anotherlen = JsonNodeInfo.getNodeEndChar(another) - JsonNodeInfo.getNodeStartChar(another);
+			if (onelen < anotherlen)
+				return 1;
+			else if (onelen > anotherlen)
+				return -1;
+			else {
+				return JsonNodeInfo.getNodeStartChar(one) < JsonNodeInfo.getNodeStartChar(another) ? 1 : -1;
+			}
+		}
 	}
 
 	public static JsonNode getRepNodebyFile(JsonNode qn, List<List<JsonNode>> nodes) {

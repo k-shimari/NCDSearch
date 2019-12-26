@@ -16,6 +16,7 @@ public class Evaluate {
 	protected List<Double> precisions = new ArrayList<Double>();
 	protected List<Double> recalls = new ArrayList<Double>();
 	protected List<Double> fvalues = new ArrayList<Double>();
+	protected List<Integer> fcsNodeSizes = new ArrayList<Integer>();
 	protected int totalCall = 0;
 	protected int totalNan = 0;
 	protected int topN;
@@ -56,6 +57,8 @@ public class Evaluate {
 		//		});
 
 		Clusters fcs = getFilteredClusters(cs, a);
+		fcsNodeSizes.add(fcs.getNodeSize());
+		//printRank(cs, fcs);
 		//		fcs.getRepJsonMap().entrySet().forEach(s -> {
 		//
 		//			System.out.println("rep:" + s);
@@ -75,7 +78,32 @@ public class Evaluate {
 		List<JsonNode> sortedList = JsonNodesInfo.getSortedListbyDistance(cs.getAllNode());
 		for (int i = 0; i < sortedList.size(); i++) {
 			if (isContainInAnswer(sortedList.get(i), a.getAllNode())) {
-				System.out.println("Rank: " + (i+1));
+				System.out.println("Answer Rank: " + (i + 1));
+			}
+		}
+	}
+
+	private void printRank(Clusters cs, Clusters fcs) {
+		System.out.println("----");
+		List<JsonNode> sortedList = JsonNodesInfo.getSortedListbyDistance(cs.getAllNode());
+		for (JsonNode node : fcs.getAllNode()) {
+			for (int i = 0; i < sortedList.size(); i++) {
+				if (node.equals(sortedList.get(i))) {
+					System.out.println("Rank: " + (i + 1));
+				}
+			}
+		}
+	}
+
+	private void printRank(Clusters cs, List<JsonNode> nodeList) {
+		System.out.println("----");
+		List<JsonNode> sortedList = JsonNodesInfo.getSortedListbyDistance(cs.getAllNode());
+		for (JsonNode node : nodeList) {
+			for (int i = 0; i < sortedList.size(); i++) {
+				if (node.equals(sortedList.get(i))) {
+					System.out.println("Rank: " + (i + 1));
+					break;
+				}
 			}
 		}
 	}
@@ -95,6 +123,10 @@ public class Evaluate {
 		System.out.println("Recall");
 		Collections.sort(recalls);
 		recalls.forEach(s -> System.out.println(s));
+
+		System.out.println("--------------");
+		System.out.println("Filtered Node Size");
+		fcsNodeSizes.forEach(s -> System.out.println(s));
 
 		//		System.out.println("--------------");
 		//		System.out.println("F-Value");
@@ -131,6 +163,7 @@ public class Evaluate {
 		System.out.println("Total Precision: " + precision);
 		System.out.println("Total Recall: " + recall);
 		System.out.println("Total F-value: " + 2 * precision * recall / (precision + recall));
+		System.out.println("TotalCheckedNode:" + totalFilteredNode);
 		System.out.println("TotalAnswerNode/TotalResultNode:" + totalAnswerNode + "/" + totalResultNode + ":"
 				+ (double) totalAnswerNode / totalResultNode);
 	}
@@ -139,16 +172,18 @@ public class Evaluate {
 		Clusters fcs = new Clusters();
 		for (List<JsonNode> nodes : cs.getClusterReps()) {
 			List<JsonNode> sortedNodes = JsonNodesInfo.getSortedListbyDistance(nodes);
-			//if (isContainInAnswer(nodes, a.getAllNode())) {
 			if (isContainMinNode(nodes, cs.getAllNode())) {
-				fcs.addClusterReps(sortedNodes);
-				fcs.addAllNode(cs.getRepJsonMap().get(sortedNodes.get(0)));
-				for (JsonNode node : sortedNodes) {
-					fcs.putRepJsonMap(node, cs.getRepJsonMap().get(node));
+				if (isContainInAnswer(nodes, a.getAllNode())) {
+					fcs.addClusterReps(sortedNodes);
+					fcs.addAllNode(cs.getRepJsonMap().get(sortedNodes.get(0)));
+					for (JsonNode node : sortedNodes) {
+						fcs.putRepJsonMap(node, cs.getRepJsonMap().get(node));
+					}
+				} else {
+					nonAnswerRepSize += sortedNodes.size();
 				}
-			} else {
-			//	nonAnswerRepSize += sortedNodes.size();
 			}
+			printRank(cs, nodes);
 		}
 		return fcs;
 	}
@@ -182,11 +217,10 @@ public class Evaluate {
 	private boolean isContainMinNode(List<JsonNode> nodes, List<JsonNode> allNode) {
 		for (int i = 0; i < this.topN; i++) {
 			JsonNode minNode = JsonNodesInfo.getSortedListbyDistance(allNode).get(i);
-			if (nodes.contains(minNode))
+			if (nodes.contains(minNode)) {
 				return true;
-			;
+			}
 		}
-
 		return false;
 	}
 

@@ -13,20 +13,13 @@ public class ClusterRepresent {
 	}
 
 	public List<JsonNode> getClusterReps(List<JsonNode> nodes) {
-		List<JsonNode> list = new ArrayList<>();
-		for (JsonNode node : nodes) {
-			if (list.size() < topN) {
-				list.add(node);
-			} else {
-				List<JsonNode> sortedList = JsonNodesInfo.getSortedListbyDistance(list);
-				if (JsonNodeInfo.getNodeDistance(node) < JsonNodeInfo.getNodeDistance(sortedList.get(topN - 1))) {
-					sortedList.remove(topN - 1);
-					sortedList.add(node);
-					list = sortedList;
-				}
-			}
+		List<JsonNode> sortedList = JsonNodesInfo.getSortedListbyDistance(nodes);
+		if (sortedList.size() <= topN) {
+			return sortedList;
+		} else {
+			List<JsonNode> list = new ArrayList<>(sortedList);
+			return list.subList(0, topN);
 		}
-		return list;
 	}
 
 	//	@Override

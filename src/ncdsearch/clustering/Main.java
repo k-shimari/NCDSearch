@@ -13,8 +13,16 @@ import ncdsearch.evaluate.IdealEvaluate;
 public class Main {
 	private static String clusteringStrategy = "EXSH";
 	private static String distanceAlgorithm = "ncd";
+	private static final int REPN = 11;
 	private static final int TOPN = 10;
+	//	private static String distanceAlgorithm = "DIR";
+	//	private static final int TOPN = 1100;
 	private static final int CLUSTER_NUM = 5;
+	//	private static int[] topNList = { 1, 43, 11, 4, 13, 16, 14, 11, 30, 8, 6, 43, 10, 10, 10, 5, 37, 12, 17, 52, 2, 4,
+	//			11, 11, 5, 13, 52, 12, 538, 112, 86, 13, 2, 4, 14, 156, 32, 2, 11, 12, 240, 11, 10, 10, 13, 13, 3, 21, 6, 5,
+	//			10, 4, 33 };//TOP10
+	//	private static int[] topNList = { 1, 22, 6, 4, 7, 16, 6, 10, 19, 5, 6, 43, 5, 7, 5, 5, 37, 7, 17, 52, 2, 4, 5, 8, 5,
+	//			7, 16, 5, 538, 112, 86, 6, 2, 4, 7, 156, 5, 2, 5, 12, 226, 7, 5, 5, 13, 5, 3, 21, 5, 5, 5, 4, 15 };//TOP5
 
 	public static void main(String[] args) {
 		try {
@@ -46,32 +54,32 @@ public class Main {
 	}
 
 	private static void evaluate(String path, Evaluate e) {
-		for (int ID = 1; ID <= 53; ID++) {
+		for (int ID = 31; ID <= 31; ID++) {
 			System.out.println("------------------");
 			System.out.println("ID:" + ID);
 			String answerJson = Paths.get(path, ("queries.json")).toAbsolutePath().toString();
-			String inputJson = Paths.get(path, ("result/lzjd-0.5-fast-k0-" + ID + ".json")).toAbsolutePath()
+			String inputJson = Paths.get(path, ("result/zip-0.5-fast-k0-" + ID + ".json")).toAbsolutePath()
 					//String inputJson = Paths.get(path, ("result/lzjd-0.5-fast-k0-" + ID + ".json")).toAbsolutePath()
 					.toString();
-			InitJson ij = new InitJson(clusteringStrategy, distanceAlgorithm, TOPN, CLUSTER_NUM);
+			InitJson ij = new InitJson(clusteringStrategy, distanceAlgorithm, REPN, CLUSTER_NUM);
 			Clusters cs = ij.converttoClusters(new File(inputJson));
 			Answers a = ij.converttoAnswer(new File(answerJson), String.valueOf(ID));
 
 			output(cs);
-			//e.setTopN(Math.min(10, cs.getClusterRepsSize() / 2 + 1));
+			//e.setTopN(topNList[ID - 1]);
 			//if(cs.getNodeSize()>10)
 			e.evaluate(cs, a);
 		}
 	}
 
 	private static void evaluate(String path, IdealEvaluate e) {
-		for (int ID = 1; ID <= 32; ID++) {
+		for (int ID = 1; ID <= 53; ID++) {
 			System.out.println("------------------");
 			System.out.println("ID:" + ID);
 			String answerJson = Paths.get(path, ("queries.json")).toAbsolutePath().toString();
 			String inputJson = Paths.get(path, ("result/zip-0.5-fast-k0-" + ID + ".json")).toAbsolutePath()
 					.toString();
-			InitJson ij = new InitJson(clusteringStrategy, distanceAlgorithm, TOPN, CLUSTER_NUM);
+			InitJson ij = new InitJson(clusteringStrategy, distanceAlgorithm, REPN, CLUSTER_NUM);
 			Clusters cs = ij.converttoClusters(new File(inputJson));
 			Answers a = ij.converttoAnswer(new File(answerJson), String.valueOf(ID));
 

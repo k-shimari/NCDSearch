@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import ncdsearch.clustering.debug.NoClustering;
 import ncdsearch.clustering.strategy.Average;
 import ncdsearch.clustering.strategy.Clustering;
 import ncdsearch.clustering.strategy.GroupAverage;
@@ -101,7 +102,9 @@ public class Clusters {
 			} else if (clustringStrategy.equals("EXAV")) {
 				c = new Average(topN, allNode, distanceAlgorithm, clusterNum);
 			} else {
-				c = new Shortest(topN, allNode, distanceAlgorithm, clusterNum);
+				System.err.println("Not Supported Strategy: " + clustringStrategy);
+				System.exit(0);
+				c = new NoClustering(topN, allNode, distanceAlgorithm, clusterNum);
 			}
 			clusterContents = c.exClustering();
 		} else {
@@ -118,7 +121,9 @@ public class Clusters {
 			} else if (clustringStrategy.equals("NF")) {
 				c = new NewmanFast(topN, allNode, distanceAlgorithm);
 			} else {
-				c = new Shortest(topN, allNode, distanceAlgorithm, clusterNum);
+				System.err.println("Not Supported Strategy: " + clustringStrategy);
+				System.err.println("No Clustering: ");
+				c = new NoClustering(topN, allNode, distanceAlgorithm, clusterNum);
 			}
 			clusterContents = c.clustering();
 		}
