@@ -7,8 +7,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import gnu.trove.map.hash.TIntDoubleHashMap;
 
 public class GroupAverage extends DistanceClustering {
-	public GroupAverage(int topN, List<JsonNode> allNode, String strategy, int clusterNum) {
-		super(topN, allNode, strategy, clusterNum);
+	public GroupAverage(List<JsonNode> allNode, String strategy, int clusterNum) {
+		super(allNode, strategy, clusterNum);
 	}
 
 	@Override

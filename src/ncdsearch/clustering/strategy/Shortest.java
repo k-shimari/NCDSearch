@@ -8,8 +8,8 @@ import gnu.trove.map.hash.TIntDoubleHashMap;
 
 public class Shortest extends DistanceClustering {
 
-	public Shortest(int topN, List<JsonNode> allNode, String strategy, int clusterNum) {
-		super(topN, allNode, strategy, clusterNum);
+	public Shortest(List<JsonNode> allNode, String strategy, int clusterNum) {
+		super(allNode, strategy, clusterNum);
 	}
 
 	@Override

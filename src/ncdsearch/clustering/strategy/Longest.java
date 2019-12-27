@@ -8,8 +8,8 @@ import gnu.trove.map.hash.TIntDoubleHashMap;
 
 public class Longest extends DistanceClustering {
 
-	public Longest(int topN, List<JsonNode> allNode, String strategy, int clusterNum) {
-		super(topN, allNode, strategy, clusterNum);
+	public Longest(List<JsonNode> allNode, String strategy, int clusterNum) {
+		super(allNode, strategy, clusterNum);
 	}
 
 	@Override

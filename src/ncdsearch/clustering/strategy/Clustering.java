@@ -6,12 +6,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 public abstract class Clustering {
 
-	protected int topN;
 	protected List<JsonNode> allNode;
 	protected String strategy;
 
-	public Clustering(int topN, List<JsonNode> allNode, String strategy) {
-		this.topN = topN;
+	public Clustering(List<JsonNode> allNode, String strategy) {
 		this.allNode = allNode;
 		this.strategy = strategy;
 	}

@@ -17,8 +17,8 @@ public class NewmanFast extends Clustering {
 	private int totalEdgeNumber;
 	private boolean[] removedFlagMap;
 
-	public NewmanFast(int topN, List<JsonNode> allNode, String strategy) {
-		super(topN, allNode, strategy);
+	public NewmanFast(List<JsonNode> allNode, String strategy) {
+		super(allNode, strategy);
 		totalVertexNumber = 0;
 		totalEdgeNumber = 0;
 	}

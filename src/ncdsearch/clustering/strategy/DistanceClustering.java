@@ -18,8 +18,8 @@ public abstract class DistanceClustering extends Clustering {
 	protected int totalVertexNumber;
 	protected boolean[] removedFlagMap;
 	private static final double exDistanceThreshold = 0.30;
-	public DistanceClustering(int topN, List<JsonNode> allNode, String strategy, int clusterNum) {
-		super(topN, allNode, strategy);
+	public DistanceClustering(List<JsonNode> allNode, String strategy, int clusterNum) {
+		super(allNode, strategy);
 		this.clusterNum = clusterNum;
 	}
 

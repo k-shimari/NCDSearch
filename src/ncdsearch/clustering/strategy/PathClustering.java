@@ -13,8 +13,8 @@ public class PathClustering extends Clustering {
 
 	private Map<String, List<JsonNode>> pathJsonMap = new HashMap<>();
 
-	public PathClustering(int topN, List<JsonNode> allNode, String strategy) {
-		super(topN, allNode, strategy);
+	public PathClustering(List<JsonNode> allNode, String strategy) {
+		super(allNode, strategy);
 	}
 
 	@Override

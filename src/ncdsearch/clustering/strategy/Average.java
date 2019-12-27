@@ -8,8 +8,8 @@ import gnu.trove.map.hash.TIntDoubleHashMap;
 
 public class Average extends DistanceClustering {
 
-	public Average(int topN, List<JsonNode> allNode, String strategy, int clusterNum) {
-		super(topN, allNode, strategy, clusterNum);
+	public Average(List<JsonNode> allNode, String strategy, int clusterNum) {
+		super(allNode, strategy, clusterNum);
 	}
 
 	@Override
