@@ -50,7 +50,7 @@ public class IdealEvaluate extends Evaluate {
 					ics.putRepJsonMap(node, cs.getRepJsonMap().get(node));
 				}
 			} else {
-				nonAnswerRepSize += Math.min(topN, nodes.size());
+				nonAnswerRepSize += Math.min(allTopN, nodes.size());
 			}
 			set.add(nodes);
 		}

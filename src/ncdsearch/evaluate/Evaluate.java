@@ -19,7 +19,8 @@ public class Evaluate {
 	protected List<Integer> fcsNodeSizes = new ArrayList<Integer>();
 	protected int totalCall = 0;
 	protected int totalNan = 0;
-	protected int topN;
+	protected int allTopN;
+	protected int clusterTopN;
 	protected int nonAnswerRepSize = 0;
 
 	protected int totalResultNode = 0;
@@ -30,12 +31,13 @@ public class Evaluate {
 	protected int totalRFind = 0;
 	protected int totalRAll = 0;
 
-	public Evaluate(int topN) {
-		this.topN = topN;
+	public Evaluate(int allTopN, int clusterTopN) {
+		this.allTopN = allTopN;
+		this.clusterTopN = clusterTopN;
 	}
 
-	public void setTopN(int topN) {
-		this.topN = topN;
+	public void setAllTopN(int allTopN) {
+		this.allTopN = allTopN;
 	}
 
 	public void evaluate(Clusters cs, Answers a) {
@@ -173,19 +175,28 @@ public class Evaluate {
 		for (List<JsonNode> nodes : cs.getClusterReps()) {
 			List<JsonNode> sortedNodes = JsonNodesInfo.getSortedListbyDistance(nodes);
 			if (isContainMinNode(nodes, cs.getAllNode())) {
-				if (isContainInAnswer(nodes, a.getAllNode())) {
-					fcs.addClusterReps(sortedNodes);
-					fcs.addAllNode(cs.getRepJsonMap().get(sortedNodes.get(0)));
-					for (JsonNode node : sortedNodes) {
-						fcs.putRepJsonMap(node, cs.getRepJsonMap().get(node));
-					}
-				} else {
-					nonAnswerRepSize += sortedNodes.size();
+				//if (isContainInAnswer(nodes, a.getAllNode())) {
+				fcs.addClusterReps(sortedNodes);
+
+				addNode(cs, fcs, sortedNodes);
+
+				for (JsonNode node : sortedNodes) {
+					fcs.putRepJsonMap(node, cs.getRepJsonMap().get(node));
 				}
+				//} else {
+				//	nonAnswerRepSize += sortedNodes.size();
+				//}
 			}
-			printRank(cs, nodes);
+			//printRank(cs, nodes);
 		}
 		return fcs;
+	}
+
+	private void addNode(Clusters cs, Clusters fcs, List<JsonNode> sortedNodes) {
+		//fcs.addAllNode(cs.getRepJsonMap().get(sortedNodes.get(0)));
+		List<JsonNode> list = new ArrayList<>(cs.getRepJsonMap().get(sortedNodes.get(0)));
+		fcs.addAllNode(list.subList(0, Math.min(list.size(), clusterTopN)));
+
 	}
 
 	private boolean isContainInAnswer(JsonNode node, List<JsonNode> answerNodes) {
@@ -215,7 +226,7 @@ public class Evaluate {
 	}
 
 	private boolean isContainMinNode(List<JsonNode> nodes, List<JsonNode> allNode) {
-		for (int i = 0; i < this.topN; i++) {
+		for (int i = 0; i < this.allTopN; i++) {
 			JsonNode minNode = JsonNodesInfo.getSortedListbyDistance(allNode).get(i);
 			if (nodes.contains(minNode)) {
 				return true;

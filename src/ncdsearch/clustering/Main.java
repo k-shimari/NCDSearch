@@ -13,8 +13,9 @@ import ncdsearch.evaluate.IdealEvaluate;
 public class Main {
 	private static String clusteringStrategy = "EXSH";
 	private static String distanceAlgorithm = "ncd";
-	private static final int REPN = 11;
-	private static final int TOPN = 10;
+	private static final int REPN = 10;
+	private static final int ALLTOPN = 20;
+	private static final int CLUSTERTOPN = 1100;
 	//	private static String distanceAlgorithm = "DIR";
 	//	private static final int TOPN = 1100;
 	private static final int CLUSTER_NUM = 5;
@@ -41,20 +42,20 @@ public class Main {
 	}
 
 	private static void callEvaluate(String path) {
-		Evaluate e = new Evaluate(TOPN);
+		Evaluate e = new Evaluate(ALLTOPN, CLUSTERTOPN);
 		evaluate(path, e);
 		//e.printAverage();
 		printLogs(e);
 	}
 
 	private static void callIdealEvaluate(String path) {
-		IdealEvaluate e = new IdealEvaluate(TOPN);
+		IdealEvaluate e = new IdealEvaluate(ALLTOPN);
 		evaluate(path, e);
 		printLogs(e);
 	}
 
 	private static void evaluate(String path, Evaluate e) {
-		for (int ID = 31; ID <= 31; ID++) {
+		for (int ID = 1; ID <= 53; ID++) {
 			System.out.println("------------------");
 			System.out.println("ID:" + ID);
 			String answerJson = Paths.get(path, ("queries.json")).toAbsolutePath().toString();
