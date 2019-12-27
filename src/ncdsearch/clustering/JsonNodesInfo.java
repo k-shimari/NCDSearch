@@ -82,29 +82,31 @@ public class JsonNodesInfo {
 
 	/*ascending order*/
 	public static List<JsonNode> getSortedListbyDistance(List<JsonNode> nodes) {
-		Collections.sort(nodes, (p1, p2) -> isBetterThan(p1, p2));
+		Collections.sort(nodes,
+				(p1, p2) -> Double.compare(p1.get("Distance").asDouble(), p2.get("Distance").asDouble()));
 		return nodes;
 	}
 
-	public static int isBetterThan(JsonNode one, JsonNode another) {
-		// Distance: Lower is better
-		if (JsonNodeInfo.getNodeDistance(one) > JsonNodeInfo.getNodeDistance(another))
-			return 1;
-		if (JsonNodeInfo.getNodeDistance(one) < JsonNodeInfo.getNodeDistance(another))
-			return -1;
-		else {
-			// Shorter is better
-			int onelen = JsonNodeInfo.getNodeEndChar(one) - JsonNodeInfo.getNodeStartChar(one);
-			int anotherlen = JsonNodeInfo.getNodeEndChar(another) - JsonNodeInfo.getNodeStartChar(another);
-			if (onelen < anotherlen)
-				return 1;
-			else if (onelen > anotherlen)
-				return -1;
-			else {
-				return JsonNodeInfo.getNodeStartChar(one) < JsonNodeInfo.getNodeStartChar(another) ? 1 : -1;
-			}
-		}
-	}
+	//TODO  Comparison method violates its general contract
+	//	public static int isBetterThan(JsonNode one, JsonNode another) {
+	//		// Distance: Lower is better
+	//		if (JsonNodeInfo.getNodeDistance(one) > JsonNodeInfo.getNodeDistance(another))
+	//			return 1;
+	//		if (JsonNodeInfo.getNodeDistance(one) < JsonNodeInfo.getNodeDistance(another))
+	//			return -1;
+	//		else {
+	//			// Shorter is better
+	//			int onelen = JsonNodeInfo.getNodeEndChar(one) - JsonNodeInfo.getNodeStartChar(one);
+	//			int anotherlen = JsonNodeInfo.getNodeEndChar(another) - JsonNodeInfo.getNodeStartChar(another);
+	//			if (onelen < anotherlen)
+	//				return 1;
+	//			else if (onelen > anotherlen)
+	//				return -1;
+	//			else {
+	//				return JsonNodeInfo.getNodeStartChar(one) < JsonNodeInfo.getNodeStartChar(another) ? 1 : -1;
+	//			}
+	//		}
+	//	}
 
 	public static JsonNode getRepNodebyFile(JsonNode qn, List<List<JsonNode>> nodes) {
 		for (List<JsonNode> nodelist : nodes) {
