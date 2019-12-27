@@ -27,11 +27,13 @@ public class Clusters {
 	private String distanceAlgorithm;
 	private int topN;
 	private int clusterNum;
+	private double exDistanceThreshold;
 
-	public Clusters(String strategy, String distanceAlgorithm, int topN, int clusterNum) {
+	public Clusters(String strategy, String distanceAlgorithm, int topN, int clusterNum, double exDistanceThreshold) {
 		this.clustringStrategy = strategy;
 		this.distanceAlgorithm = distanceAlgorithm;
 		this.topN = topN;
+		this.exDistanceThreshold = exDistanceThreshold;
 		this.clusterNum = clusterNum;
 	}
 
@@ -100,13 +102,13 @@ public class Clusters {
 		Clustering c;
 		if (clustringStrategy.startsWith("EX")) {
 			if (clustringStrategy.equals("EXSH")) {
-				c = new Shortest(allNode, distanceAlgorithm, clusterNum);
+				c = new Shortest(allNode, distanceAlgorithm, clusterNum, exDistanceThreshold);
 			} else if (clustringStrategy.equals("EXLO")) {
-				c = new Longest(allNode, distanceAlgorithm, clusterNum);
+				c = new Longest(allNode, distanceAlgorithm, clusterNum, exDistanceThreshold);
 			} else if (clustringStrategy.equals("EXGA")) {
-				c = new GroupAverage(allNode, distanceAlgorithm, clusterNum);
+				c = new GroupAverage(allNode, distanceAlgorithm, clusterNum, exDistanceThreshold);
 			} else if (clustringStrategy.equals("EXAV")) {
-				c = new Average(allNode, distanceAlgorithm, clusterNum);
+				c = new Average(allNode, distanceAlgorithm, clusterNum, exDistanceThreshold);
 			} else {
 				System.err.println("Not Supported Strategy: " + clustringStrategy);
 				System.exit(0);

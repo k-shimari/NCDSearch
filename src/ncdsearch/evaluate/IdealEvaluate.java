@@ -10,10 +10,11 @@ import ncdsearch.clustering.Answers;
 import ncdsearch.clustering.Clusters;
 import ncdsearch.clustering.JsonNodesInfo;
 
+
+
 public class IdealEvaluate extends Evaluate {
-	public IdealEvaluate(int topN) {
-		super(topN);
-		// TODO 自動生成されたコンストラクター・スタブ
+	public IdealEvaluate(int allTopN, int clusterTopN) {
+		super(allTopN,clusterTopN);
 	}
 
 	@Override

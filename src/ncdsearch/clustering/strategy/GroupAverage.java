@@ -11,6 +11,10 @@ public class GroupAverage extends DistanceClustering {
 		super(allNode, strategy, clusterNum);
 	}
 
+	public GroupAverage(List<JsonNode> allNode, String strategy, int clusterNum, double exDistanceThreshold) {
+		super(allNode, strategy, clusterNum, exDistanceThreshold);
+	}
+
 	@Override
 	protected double calcDistance(Cluster c1, Cluster c2) {
 		return c1.getMinDistance(c2);

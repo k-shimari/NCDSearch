@@ -17,10 +17,16 @@ public abstract class DistanceClustering extends Clustering {
 	protected int clusterNum;
 	protected int totalVertexNumber;
 	protected boolean[] removedFlagMap;
-	private static final double exDistanceThreshold = 0.30;
+	private double exDistanceThreshold;
+
 	public DistanceClustering(List<JsonNode> allNode, String strategy, int clusterNum) {
 		super(allNode, strategy);
 		this.clusterNum = clusterNum;
+	}
+
+	public DistanceClustering(List<JsonNode> allNode, String strategy, int clusterNum, double exDistanceThreshold) {
+		this(allNode, strategy, clusterNum);
+		this.exDistanceThreshold = exDistanceThreshold;
 	}
 
 	@Override
@@ -45,7 +51,6 @@ public abstract class DistanceClustering extends Clustering {
 		return getNodeList();
 	}
 
-
 	@Override
 	public List<List<JsonNode>> exClustering() {
 		init();
@@ -53,7 +58,7 @@ public abstract class DistanceClustering extends Clustering {
 		double minDistance = 0.0;
 		System.err.println("initial clusters : " + mapSize);
 		int idx = 1;
-		while (minDistance <= exDistanceThreshold  && idx != totalVertexNumber) {
+		while (minDistance <= exDistanceThreshold && idx != totalVertexNumber) {
 			idx++;
 			update();
 			minDistance = getMinDistance();
@@ -95,7 +100,6 @@ public abstract class DistanceClustering extends Clustering {
 		}
 		return nodeList;
 	}
-
 
 	protected List<Cluster> createInitialClusters(List<Component> nodes) {
 		List<Cluster> clusters = new ArrayList<>();
@@ -169,7 +173,8 @@ public abstract class DistanceClustering extends Clustering {
 		return minDistance;
 	}
 
-	protected abstract void update() ;
-	protected abstract double calcDistance(Cluster c1, Cluster c2) ;
+	protected abstract void update();
+
+	protected abstract double calcDistance(Cluster c1, Cluster c2);
 
 }

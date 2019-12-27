@@ -48,7 +48,7 @@ public class Evaluate {
 		System.out.println("TotalNode: " + cs.getNodeSize());
 		System.out.println("TotalDir: " + cs.getClusterRepsSize());
 		System.out.println("-------");
-		printAnswerRank(cs, a);
+		//printAnswerRank(cs, a);
 
 		//		cs.getRepJsonMap().keySet().forEach(s -> {
 		//
@@ -175,7 +175,7 @@ public class Evaluate {
 		for (List<JsonNode> nodes : cs.getClusterReps()) {
 			List<JsonNode> sortedNodes = JsonNodesInfo.getSortedListbyDistance(nodes);
 			if (isContainMinNode(nodes, cs.getAllNode())) {
-				//if (isContainInAnswer(nodes, a.getAllNode())) {
+			//	if (isContainInAnswer(nodes, a.getAllNode())) {
 				fcs.addClusterReps(sortedNodes);
 
 				addNode(cs, fcs, sortedNodes);
@@ -183,9 +183,9 @@ public class Evaluate {
 				for (JsonNode node : sortedNodes) {
 					fcs.putRepJsonMap(node, cs.getRepJsonMap().get(node));
 				}
-				//} else {
-				//	nonAnswerRepSize += sortedNodes.size();
-				//}
+			//	} else {
+			//		nonAnswerRepSize += sortedNodes.size();
+			//	}
 			}
 			//printRank(cs, nodes);
 		}

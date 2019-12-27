@@ -12,6 +12,10 @@ public class Shortest extends DistanceClustering {
 		super(allNode, strategy, clusterNum);
 	}
 
+	public Shortest(List<JsonNode> allNode, String strategy, int clusterNum, double exDistanceThreshold) {
+		super(allNode, strategy, clusterNum, exDistanceThreshold);
+	}
+
 	@Override
 	protected double calcDistance(Cluster c1, Cluster c2) {
 		return c1.getMinDistance(c2);
@@ -54,6 +58,5 @@ public class Shortest extends DistanceClustering {
 
 		setMinDistance();
 	}
-
 
 }

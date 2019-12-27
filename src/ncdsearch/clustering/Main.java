@@ -13,8 +13,11 @@ import ncdsearch.evaluate.IdealEvaluate;
 public class Main {
 	private static String clusteringStrategy = "EXSH";
 	private static String distanceAlgorithm = "ncd";
+	private static int ALLTOPN = 10;
+	private static double exDistanceThreshold = 0.3;
+
+	//Optional Param
 	private static final int REPN = 10;
-	private static final int ALLTOPN = 20;
 	private static final int CLUSTERTOPN = 1100;
 	//	private static String distanceAlgorithm = "DIR";
 	//	private static final int TOPN = 1100;
@@ -35,8 +38,11 @@ public class Main {
 		}
 		//String ID= args[1];
 		//String ID = "4";
-		if (args.length > 1)
-			setStrategy(args[1]);
+		if (args.length > 1) {
+			//setStrategy(args[1]);
+			ALLTOPN = Integer.parseInt(args[1]);
+			exDistanceThreshold = Double.parseDouble(args[2]);
+		}
 		callEvaluate(args[0]);
 		//callIdealEvaluate(args[0]);
 	}
@@ -49,7 +55,7 @@ public class Main {
 	}
 
 	private static void callIdealEvaluate(String path) {
-		IdealEvaluate e = new IdealEvaluate(ALLTOPN);
+		IdealEvaluate e = new IdealEvaluate(ALLTOPN, CLUSTERTOPN);
 		evaluate(path, e);
 		printLogs(e);
 	}
@@ -62,7 +68,7 @@ public class Main {
 			String inputJson = Paths.get(path, ("result/zip-0.5-fast-k0-" + ID + ".json")).toAbsolutePath()
 					//String inputJson = Paths.get(path, ("result/lzjd-0.5-fast-k0-" + ID + ".json")).toAbsolutePath()
 					.toString();
-			InitJson ij = new InitJson(clusteringStrategy, distanceAlgorithm, REPN, CLUSTER_NUM);
+			InitJson ij = new InitJson(clusteringStrategy, distanceAlgorithm, REPN, CLUSTER_NUM, exDistanceThreshold);
 			Clusters cs = ij.converttoClusters(new File(inputJson));
 			Answers a = ij.converttoAnswer(new File(answerJson), String.valueOf(ID));
 
@@ -80,7 +86,7 @@ public class Main {
 			String answerJson = Paths.get(path, ("queries.json")).toAbsolutePath().toString();
 			String inputJson = Paths.get(path, ("result/zip-0.5-fast-k0-" + ID + ".json")).toAbsolutePath()
 					.toString();
-			InitJson ij = new InitJson(clusteringStrategy, distanceAlgorithm, REPN, CLUSTER_NUM);
+			InitJson ij = new InitJson(clusteringStrategy, distanceAlgorithm, REPN, CLUSTER_NUM, exDistanceThreshold);
 			Clusters cs = ij.converttoClusters(new File(inputJson));
 			Answers a = ij.converttoAnswer(new File(answerJson), String.valueOf(ID));
 
