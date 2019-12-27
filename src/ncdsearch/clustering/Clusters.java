@@ -110,7 +110,7 @@ public class Clusters {
 			} else {
 				System.err.println("Not Supported Strategy: " + clustringStrategy);
 				System.exit(0);
-				c = new NoClustering(topN, allNode, distanceAlgorithm, clusterNum);
+				c = new NoClustering(allNode, distanceAlgorithm, clusterNum);
 			}
 			clusterContents = c.exClustering();
 		} else {
