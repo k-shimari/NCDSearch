@@ -129,7 +129,7 @@ public class Clusters {
 			} else {
 				System.err.println("Not Supported Strategy: " + clustringStrategy);
 				System.err.println("No Clustering: ");
-				c = new NoClustering(topN, allNode, distanceAlgorithm, clusterNum);
+				c = new NoClustering(allNode, distanceAlgorithm, clusterNum);
 			}
 			clusterContents = c.clustering();
 		}
