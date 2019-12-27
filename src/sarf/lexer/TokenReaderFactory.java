@@ -174,8 +174,8 @@ public class TokenReaderFactory {
 			case PLAINTEXT:
 				return new PlainTextReader(new StringReader(new String(buf, charset)));
 
-			case DOCX:
-				return new DocxReader(new ByteArrayInputStream(buf));
+//			case DOCX:
+//				return new DocxReader(new ByteArrayInputStream(buf));
 
 			case UNSUPPORTED:
 			default:
@@ -196,8 +196,8 @@ public class TokenReaderFactory {
 	 */
 	public static TokenReader create(FileType filetype, InputStream stream) {
 		switch (filetype) {
-		case DOCX:
-			return new DocxReader(stream);
+//		case DOCX:
+//			return new DocxReader(stream);
 
 		default:
 			return create(filetype, new InputStreamReader(stream));
