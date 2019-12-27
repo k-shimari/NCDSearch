@@ -46,6 +46,12 @@ public class Clusters {
 		allNode.addAll(nodes);
 	}
 
+	public void addNodes(List<JsonNode> nodes, int count) {
+		for (int i = 0; (i < count && i < nodes.size()); i++) {
+			allNode.add(nodes.get(i));
+		}
+	}
+
 	public List<JsonNode> getAllNode() {
 		return allNode;
 	}
@@ -94,13 +100,13 @@ public class Clusters {
 		Clustering c;
 		if (clustringStrategy.startsWith("EX")) {
 			if (clustringStrategy.equals("EXSH")) {
-				c = new Shortest(topN, allNode, distanceAlgorithm, clusterNum);
+				c = new Shortest(allNode, distanceAlgorithm, clusterNum);
 			} else if (clustringStrategy.equals("EXLO")) {
-				c = new Longest(topN, allNode, distanceAlgorithm, clusterNum);
+				c = new Longest(allNode, distanceAlgorithm, clusterNum);
 			} else if (clustringStrategy.equals("EXGA")) {
-				c = new GroupAverage(topN, allNode, distanceAlgorithm, clusterNum);
+				c = new GroupAverage(allNode, distanceAlgorithm, clusterNum);
 			} else if (clustringStrategy.equals("EXAV")) {
-				c = new Average(topN, allNode, distanceAlgorithm, clusterNum);
+				c = new Average(allNode, distanceAlgorithm, clusterNum);
 			} else {
 				System.err.println("Not Supported Strategy: " + clustringStrategy);
 				System.exit(0);
@@ -109,17 +115,17 @@ public class Clusters {
 			clusterContents = c.exClustering();
 		} else {
 			if (clustringStrategy.equals("DIR") || clustringStrategy.equals("FILE")) {
-				c = new PathClustering(topN, allNode, clustringStrategy);
+				c = new PathClustering(allNode, clustringStrategy);
 			} else if (clustringStrategy.equals("SH")) {
-				c = new Shortest(topN, allNode, distanceAlgorithm, clusterNum);
+				c = new Shortest(allNode, distanceAlgorithm, clusterNum);
 			} else if (clustringStrategy.equals("LO")) {
-				c = new Longest(topN, allNode, distanceAlgorithm, clusterNum);
+				c = new Longest(allNode, distanceAlgorithm, clusterNum);
 			} else if (clustringStrategy.equals("GA")) {
-				c = new GroupAverage(topN, allNode, distanceAlgorithm, clusterNum);
+				c = new GroupAverage(allNode, distanceAlgorithm, clusterNum);
 			} else if (clustringStrategy.equals("AV")) {
-				c = new Average(topN, allNode, distanceAlgorithm, clusterNum);
+				c = new Average(allNode, distanceAlgorithm, clusterNum);
 			} else if (clustringStrategy.equals("NF")) {
-				c = new NewmanFast(topN, allNode, distanceAlgorithm);
+				c = new NewmanFast(allNode, distanceAlgorithm);
 			} else {
 				System.err.println("Not Supported Strategy: " + clustringStrategy);
 				System.err.println("No Clustering: ");
