@@ -39,9 +39,9 @@ public class Main {
 		//String ID= args[1];
 		//String ID = "4";
 		if (args.length > 1) {
-			//setStrategy(args[1]);
 			ALLTOPN = Integer.parseInt(args[1]);
 			exDistanceThreshold = Double.parseDouble(args[2]);
+			clusteringStrategy = args[3];
 		}
 		callEvaluate(args[0]);
 		//callIdealEvaluate(args[0]);
@@ -104,11 +104,8 @@ public class Main {
 		System.out.println("------------------");
 		System.out.println("Total:");
 		e.printAll();
-		System.out.println("------------------");
+		System.err.println(distanceAlgorithm + ", " + clusteringStrategy + ", " + ALLTOPN + ", " + exDistanceThreshold);
+		System.err.println("------------------");
 		e.printAverage();
-	}
-
-	private static void setStrategy(String s) {
-		clusteringStrategy = s;
 	}
 }

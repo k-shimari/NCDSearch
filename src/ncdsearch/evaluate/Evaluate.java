@@ -19,8 +19,13 @@ public class Evaluate {
 	protected List<Integer> fcsNodeSizes = new ArrayList<Integer>();
 	protected int totalCall = 0;
 	protected int totalNan = 0;
-	protected int allTopN;
 	protected int clusterTopN;
+
+	private String clusteringStrategy;
+	private String distanceAlgorithm;
+	protected int allTopN;
+	private double exDistanceThreshold;
+
 	protected int nonAnswerRepSize = 0;
 
 	protected int totalResultNode = 0;
@@ -142,17 +147,17 @@ public class Evaluate {
 		for (double d : reduceWorks) {
 			sum += d;
 		}
-		System.out.println("Ave Reduction rate: " + sum / totalCall);
+		System.err.println("Ave Reduction rate: " + sum / totalCall);
 		sum = 0.0;
 		for (double d : precisions) {
 			sum += d;
 		}
-		System.out.println("Ave Precision: " + sum / (totalCall - totalNan));
+		System.err.println("Ave Precision: " + sum / (totalCall - totalNan));
 		sum = 0.0;
 		for (double d : recalls) {
 			sum += d;
 		}
-		System.out.println("Ave Recall: " + sum / totalCall);
+		System.err.println("Ave Recall: " + sum / totalCall);
 		//		sum = 0.0;
 		//		for (double d : fvalues) {
 		//			sum += d;
@@ -161,12 +166,12 @@ public class Evaluate {
 		double precision = (double) totalPFind / totalPAll;
 		double recall = (double) totalRFind / totalRAll;
 		double reduction = 1.0 - (double) totalFilteredNode / totalResultNode;
-		System.out.println("Total Reduction rate: " + reduction);
-		System.out.println("Total Precision: " + precision);
-		System.out.println("Total Recall: " + recall);
-		System.out.println("Total F-value: " + 2 * precision * recall / (precision + recall));
-		System.out.println("TotalCheckedNode:" + totalFilteredNode);
-		System.out.println("TotalAnswerNode/TotalResultNode:" + totalAnswerNode + "/" + totalResultNode + ":"
+		System.err.println("Total Reduction rate: " + reduction);
+		System.err.println("Total Precision: " + precision);
+		System.err.println("Total Recall: " + recall);
+		System.err.println("Total F-value: " + 2 * precision * recall / (precision + recall));
+		System.err.println("TotalCheckedNode: " + totalFilteredNode);
+		System.err.println("TotalAnswerNode/TotalResultNode:" + totalAnswerNode + "/" + totalResultNode + ": "
 				+ (double) totalAnswerNode / totalResultNode);
 	}
 
