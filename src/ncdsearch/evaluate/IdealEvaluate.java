@@ -13,8 +13,8 @@ import ncdsearch.clustering.JsonNodesInfo;
 
 
 public class IdealEvaluate extends Evaluate {
-	public IdealEvaluate(int allTopN, int clusterTopN) {
-		super(allTopN,clusterTopN);
+	public IdealEvaluate(String checkN, int clusterTopN) {
+		super(checkN,clusterTopN);
 	}
 
 	@Override
@@ -52,6 +52,7 @@ public class IdealEvaluate extends Evaluate {
 				}
 			} else {
 				nonAnswerRepSize += Math.min(allTopN, nodes.size());
+//				nonAnswerRepSize += Math.min(10, nodes.size());
 			}
 			set.add(nodes);
 		}

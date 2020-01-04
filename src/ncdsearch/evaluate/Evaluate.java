@@ -21,10 +21,9 @@ public class Evaluate {
 	protected int totalNan = 0;
 	protected int clusterTopN;
 
-	private String clusteringStrategy;
-	private String distanceAlgorithm;
 	protected int allTopN;
-	private double exDistanceThreshold;
+	protected double distanceThreshold;
+	protected boolean isDistance;
 
 	protected int nonAnswerRepSize = 0;
 
@@ -36,16 +35,36 @@ public class Evaluate {
 	protected int totalRFind = 0;
 	protected int totalRAll = 0;
 
-	public Evaluate(int allTopN, int clusterTopN) {
-		this.allTopN = allTopN;
+	public Evaluate(String checkN, int clusterTopN) {
+		this.allTopN = setAllTopN(checkN);
 		this.clusterTopN = clusterTopN;
 	}
 
-	public void setAllTopN(int allTopN) {
-		this.allTopN = allTopN;
+	private int setAllTopN(String checkN) {
+		if (checkN.startsWith("Top")) {
+			return Integer.parseInt(checkN.substring("Top".length()));
+		} else if (checkN.startsWith("Dis")) {
+			this.isDistance = true;
+			this.distanceThreshold = Double.parseDouble(checkN.substring("Dis".length()));
+			return 1;
+		} else {
+			return 10;
+		}
 	}
 
+	//	public void setAllTopN(int allTopN) {
+	//		this.checkN = allTopN;
+	//	}
+
 	public void evaluate(Clusters cs, Answers a) {
+		if (isDistance) {
+			allTopN=0;
+			for (JsonNode node : cs.getAllNode()) {
+				if(JsonNodeInfo.getNodeDistance(node)<=distanceThreshold) {
+					allTopN++;
+				}
+			}
+		}
 		totalCall++;
 		nonAnswerRepSize = 0;
 		totalResultNode += cs.getNodeSize();
@@ -147,17 +166,20 @@ public class Evaluate {
 		for (double d : reduceWorks) {
 			sum += d;
 		}
-		System.err.println("Ave Reduction rate: " + sum / totalCall);
+		//System.err.println("Ave Reduction rate: " + sum / totalCall);
+		System.err.println(sum / totalCall);
 		sum = 0.0;
 		for (double d : precisions) {
 			sum += d;
 		}
-		System.err.println("Ave Precision: " + sum / (totalCall - totalNan));
+		//System.err.println("Ave Precision: " + sum / (totalCall - totalNan));
+		System.err.println(sum / (totalCall - totalNan));
 		sum = 0.0;
 		for (double d : recalls) {
 			sum += d;
 		}
-		System.err.println("Ave Recall: " + sum / totalCall);
+		//System.err.println("Ave Recall: " + sum / totalCall);
+		System.err.println(sum / totalCall);
 		//		sum = 0.0;
 		//		for (double d : fvalues) {
 		//			sum += d;
@@ -166,13 +188,20 @@ public class Evaluate {
 		double precision = (double) totalPFind / totalPAll;
 		double recall = (double) totalRFind / totalRAll;
 		double reduction = 1.0 - (double) totalFilteredNode / totalResultNode;
-		System.err.println("Total Reduction rate: " + reduction);
-		System.err.println("Total Precision: " + precision);
-		System.err.println("Total Recall: " + recall);
-		System.err.println("Total F-value: " + 2 * precision * recall / (precision + recall));
-		System.err.println("TotalCheckedNode: " + totalFilteredNode);
-		System.err.println("TotalAnswerNode/TotalResultNode:" + totalAnswerNode + "/" + totalResultNode + ": "
-				+ (double) totalAnswerNode / totalResultNode);
+		//		System.err.println("Total Reduction rate: " + reduction);
+		//		System.err.println("Total Precision: " + precision);
+		//		System.err.println("Total Recall: " + recall);
+		//		System.err.println("Total F-value: " + 2 * precision * recall / (precision + recall));
+		//		System.err.println("TotalCheckedNode: " + totalFilteredNode);
+		//		System.err.println("TotalAnswerNode/TotalResultNode:" + totalAnswerNode + "/" + totalResultNode + ": "
+		//				+ (double) totalAnswerNode / totalResultNode);
+		System.err.println(reduction);
+		System.err.println(precision);
+		System.err.println(recall);
+		System.err.println(2 * precision * recall / (precision + recall));
+		System.err.println(totalFilteredNode);
+		//		System.err.println(totalAnswerNode + "/" + totalResultNode + ": "
+		//				+ (double) totalAnswerNode / totalResultNode);
 	}
 
 	public Clusters getFilteredClusters(Clusters cs, Answers a) {
@@ -180,7 +209,7 @@ public class Evaluate {
 		for (List<JsonNode> nodes : cs.getClusterReps()) {
 			List<JsonNode> sortedNodes = JsonNodesInfo.getSortedListbyDistance(nodes);
 			if (isContainMinNode(nodes, cs.getAllNode())) {
-			//	if (isContainInAnswer(nodes, a.getAllNode())) {
+				//	if (isContainInAnswer(nodes, a.getAllNode())) {
 				fcs.addClusterReps(sortedNodes);
 
 				addNode(cs, fcs, sortedNodes);
@@ -188,9 +217,9 @@ public class Evaluate {
 				for (JsonNode node : sortedNodes) {
 					fcs.putRepJsonMap(node, cs.getRepJsonMap().get(node));
 				}
-			//	} else {
-			//		nonAnswerRepSize += sortedNodes.size();
-			//	}
+				//	} else {
+				//		nonAnswerRepSize += sortedNodes.size();
+				//	}
 			}
 			//printRank(cs, nodes);
 		}

@@ -14,6 +14,10 @@ public class NoClustering extends DistanceClustering {
 		super(allNode, strategy, clusterNum);
 	}
 
+	public NoClustering(List<JsonNode> allNode, String strategy, int clusterNum, double exDistanceThreshold) {
+		super(allNode, strategy, clusterNum, exDistanceThreshold);
+	}
+
 	@Override
 	public List<List<JsonNode>> clustering() {
 		List<List<JsonNode>> nodeList = new ArrayList<>();

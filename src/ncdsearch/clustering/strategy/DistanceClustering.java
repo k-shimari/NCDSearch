@@ -17,7 +17,7 @@ public abstract class DistanceClustering extends Clustering {
 	protected int clusterNum;
 	protected int totalVertexNumber;
 	protected boolean[] removedFlagMap;
-	private double exDistanceThreshold;
+	protected double exDistanceThreshold;
 
 	public DistanceClustering(List<JsonNode> allNode, String strategy, int clusterNum) {
 		super(allNode, strategy);
