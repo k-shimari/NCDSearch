@@ -1,9 +1,6 @@
 package ncdsearch.clustering;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import ncdsearch.clustering.debug.OutputClusters;
@@ -30,13 +27,13 @@ public class Main {
 	//			7, 16, 5, 538, 112, 86, 6, 2, 4, 7, 156, 5, 2, 5, 12, 226, 7, 5, 5, 13, 5, 3, 21, 5, 5, 5, 4, 15 };//TOP5
 
 	public static void main(String[] args) {
-		try {
-			BufferedWriter bw = Files.newBufferedWriter(Paths.get("F://ncdsearch/rereresult.txt"));
-			bw.close();
-		} catch (IOException e) {
-			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
-		}
+//		try {
+//			BufferedWriter bw = Files.newBufferedWriter(Paths.get("F://ncdsearch/rereresult.txt"));
+//			bw.close();
+//		} catch (IOException e) {
+//			// TODO 自動生成された catch ブロック
+//			e.printStackTrace();
+//		}
 		//String ID= args[1];
 		//String ID = "4";
 		if (args.length > 1) {
@@ -69,7 +66,7 @@ public class Main {
 			System.out.println("------------------");
 			System.out.println("ID:" + ID);
 			String answerJson = Paths.get(path, ("queries.json")).toAbsolutePath().toString();
-			String inputJson = Paths.get(path, ("result/old/zip-0.5-fast-k0-" + ID + ".json")).toAbsolutePath()
+			String inputJson = Paths.get(path, ("result/zip-0.6-fast-k0-" + ID + ".json")).toAbsolutePath()
 					//String inputJson = Paths.get(path, ("result/lzjd-0.5-fast-k0-" + ID + ".json")).toAbsolutePath()
 					.toString();
 			InitJson ij = new InitJson(clusteringStrategy, distanceAlgorithm, REPN, CLUSTER_NUM, exDistanceThreshold,
@@ -77,7 +74,7 @@ public class Main {
 			Clusters cs = ij.converttoClusters(new File(inputJson));
 			Answers a = ij.converttoAnswer(new File(answerJson), String.valueOf(ID));
 
-			output(cs);
+			//output(cs);
 			//e.setTopN(topNList[ID - 1]);
 			//if(cs.getNodeSize()>10)
 			e.evaluate(cs, a);
