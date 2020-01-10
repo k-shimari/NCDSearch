@@ -50,9 +50,11 @@ public class DistanceFiltering extends DistanceClustering {
 		}
 
 		List<List<JsonNode>> nodeList = new ArrayList<>();
+		this.allNode.clear();
 		for (int i = 0; i < totalVertexNumber; i++) {
 			if (removedFlagMap[i]) {
 				for (Component co : clusterMap.get(i).getComponents()) {
+					this.allNode.add(co.getJsonNode());
 					List<JsonNode> list = new ArrayList<>();
 					list.add(co.getJsonNode());
 					nodeList.add(list);
@@ -73,6 +75,6 @@ public class DistanceFiltering extends DistanceClustering {
 
 	@Override
 	protected double calcDistance(Cluster c1, Cluster c2) {
-		return 0;
+		return c1.getMinDistance(c2);
 	}
 }

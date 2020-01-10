@@ -226,7 +226,7 @@ public class Evaluate {
 		return fcs;
 	}
 
-	private void addNode(Clusters cs, Clusters fcs, List<JsonNode> sortedNodes) {
+	protected void addNode(Clusters cs, Clusters fcs, List<JsonNode> sortedNodes) {
 		//fcs.addAllNode(cs.getRepJsonMap().get(sortedNodes.get(0)));
 		List<JsonNode> list = new ArrayList<>(cs.getRepJsonMap().get(sortedNodes.get(0)));
 		fcs.addAllNode(list.subList(0, Math.min(list.size(), clusterTopN)));
