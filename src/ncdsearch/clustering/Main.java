@@ -74,7 +74,7 @@ public class Main {
 			System.out.println("------------------");
 			System.out.println("ID:" + ID);
 			String answerJson = Paths.get(path, ("queries.json")).toAbsolutePath().toString();
-			String inputJson = Paths.get(path, ("result/zip-0.6-fast-k0-" + ID + ".json")).toAbsolutePath()
+			String inputJson = Paths.get(path, ("result/zip-0.5-fast-k0-" + ID + ".json")).toAbsolutePath()
 					//String inputJson = Paths.get(path, ("result/lzjd-0.5-fast-k0-" + ID + ".json")).toAbsolutePath()
 					.toString();
 			InitJson ij = new InitJson(clusteringStrategy, distanceAlgorithm, REPN, CLUSTER_NUM, exDistanceThreshold,
@@ -94,7 +94,7 @@ public class Main {
 			System.out.println("------------------");
 			System.out.println("ID:" + ID);
 			String answerJson = Paths.get(path, ("queries.json")).toAbsolutePath().toString();
-			String inputJson = Paths.get(path, ("result/zip-0.6-fast-k0-" + ID + ".json")).toAbsolutePath()
+			String inputJson = Paths.get(path, ("result/zip-0.5-fast-k0-" + ID + ".json")).toAbsolutePath()
 					//String inputJson = Paths.get(path, ("result/lzjd-0.5-fast-k0-" + ID + ".json")).toAbsolutePath()
 					.toString();
 			InitJson ij = new InitJson("NO", distanceAlgorithm, REPN, CLUSTER_NUM, 0, 0);
@@ -138,10 +138,10 @@ public class Main {
 		System.out.println("------------------");
 		System.out.println("Total:");
 		e.printAll();
-		System.err.println(distanceAlgorithm + ", " + clusteringStrategy + ", Dis" + exDistanceThreshold + ", " + clusterDistance);
-//		System.err.println(distanceAlgorithm + ", " + clusteringStrategy + ", " + checkN + ", " + exDistanceThreshold
-//		+ ", " + clusterDistance
-//		);
+//		System.err.println(distanceAlgorithm + ", " + clusteringStrategy + ", Dis" + exDistanceThreshold + ", " + clusterDistance);
+		System.err.println(distanceAlgorithm + ", " + clusteringStrategy + ", " + checkN + ", " + exDistanceThreshold
+		+ ", " + clusterDistance
+		);
 		System.err.println("------------------");
 		e.printAverage();
 	}

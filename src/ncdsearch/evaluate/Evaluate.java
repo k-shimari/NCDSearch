@@ -58,9 +58,9 @@ public class Evaluate {
 
 	public void evaluate(Clusters cs, Answers a) {
 		if (isDistance) {
-			allTopN=0;
+			allTopN = 0;
 			for (JsonNode node : cs.getAllNode()) {
-				if(JsonNodeInfo.getNodeDistance(node)<=distanceThreshold) {
+				if (JsonNodeInfo.getNodeDistance(node) <= distanceThreshold) {
 					allTopN++;
 				}
 			}
@@ -209,17 +209,17 @@ public class Evaluate {
 		for (List<JsonNode> nodes : cs.getClusterReps()) {
 			List<JsonNode> sortedNodes = JsonNodesInfo.getSortedListbyDistance(nodes);
 			if (isContainMinNode(nodes, cs.getAllNode())) {
-				//	if (isContainInAnswer(nodes, a.getAllNode())) {
-				fcs.addClusterReps(sortedNodes);
+				//if (isContainInAnswer(nodes, a.getAllNode())) {
+					fcs.addClusterReps(sortedNodes);
 
-				addNode(cs, fcs, sortedNodes);
+					addNode(cs, fcs, sortedNodes);
 
-				for (JsonNode node : sortedNodes) {
-					fcs.putRepJsonMap(node, cs.getRepJsonMap().get(node));
-				}
-				//	} else {
-				//		nonAnswerRepSize += sortedNodes.size();
-				//	}
+					for (JsonNode node : sortedNodes) {
+						fcs.putRepJsonMap(node, cs.getRepJsonMap().get(node));
+					}
+				//} else {
+				//	nonAnswerRepSize += sortedNodes.size();
+				//}
 			}
 			//printRank(cs, nodes);
 		}
