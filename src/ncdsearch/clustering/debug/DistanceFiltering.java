@@ -23,16 +23,14 @@ public class DistanceFiltering extends DistanceClustering {
 	@Override
 	public List<List<JsonNode>> clustering() {
 		init();
+		/*add element whose distance is less than threshold*/
 		List<Cluster> allClusterList = new ArrayList<>();
-		for (int i = 0; i < totalVertexNumber; i++) {
-			for (Component co : clusterMap.get(i).getComponents()) {
-				if (JsonNodeInfo.getNodeDistance(co.getJsonNode()) <= exDistanceThreshold) {
-					allClusterList.add(clusterMap.get(i));
-					removedFlagMap[i] = true;
-				}
-			}
-		}
 
+		/*TopN or DistanceN*/
+		addJsonNodebyTopN(allClusterList);
+		//addJsonNodebyDistance(allClusterList);
+
+		/*add element near fragment selected previous block*/
 		for (int i = 0; i < totalVertexNumber; i++) {
 			if (removedFlagMap[i])
 				continue;
@@ -49,6 +47,7 @@ public class DistanceFiltering extends DistanceClustering {
 			}
 		}
 
+		/*push element to filteredlist*/
 		List<List<JsonNode>> nodeList = new ArrayList<>();
 		this.allNode.clear();
 		for (int i = 0; i < totalVertexNumber; i++) {
@@ -62,6 +61,44 @@ public class DistanceFiltering extends DistanceClustering {
 			}
 		}
 		return nodeList;
+	}
+
+	private void addJsonNodebyDistance(List<Cluster> allClusterList) {
+		for (int i = 0; i < totalVertexNumber; i++) {
+			for (Component co : clusterMap.get(i).getComponents()) {
+				if (JsonNodeInfo.getNodeDistance(co.getJsonNode()) <= exDistanceThreshold) {
+					allClusterList.add(clusterMap.get(i));
+					removedFlagMap[i] = true;
+				}
+			}
+		}
+	}
+
+	private void addJsonNodebyTopN(List<Cluster> allClusterList) {
+		int topN = (int) exDistanceThreshold;
+		for (int i = 0; i < totalVertexNumber; i++) {
+			for (Component co : clusterMap.get(i).getComponents()) {
+				if (allClusterList.size() == 0) {
+					allClusterList.add(clusterMap.get(i));
+					removedFlagMap[i] = true;
+				} else {
+					double distance = JsonNodeInfo.getNodeDistance(co.getJsonNode());
+					boolean nonAdded = true;
+					for (int j = 0; j < allClusterList.size() && j < topN && nonAdded; j++) {
+						for (Component c : allClusterList.get(j).getComponents()) {
+							if (distance < JsonNodeInfo.getNodeDistance(c.getJsonNode())) {
+								allClusterList.add(j, clusterMap.get(i));
+								removedFlagMap[i] = true;
+								nonAdded = false;
+							}
+						}
+					}
+					if (allClusterList.size() > topN) {
+						allClusterList.remove(topN);
+					}
+				}
+			}
+		}
 	}
 
 	public List<List<JsonNode>> exClustering() {
