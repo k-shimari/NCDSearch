@@ -45,8 +45,11 @@ public class Main {
 		if (args.length > 4) {
 			clusterDistance = Double.parseDouble(args[4]);
 		}
-		//callEvaluate(args[0]);
-		callDistanceFilteringEvaluate(args[0]);
+		if(clusteringStrategy.equals("EXDF")) {
+			callDistanceFilteringEvaluate(args[0]);
+		}else {
+			callEvaluate(args[0]);
+		}
 		//callIdealEvaluate(args[0]);
 	}
 

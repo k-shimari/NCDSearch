@@ -7,7 +7,8 @@ import java.util.Map;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import ncdsearch.clustering.debug.DistanceFiltering;
+import ncdsearch.clustering.debug.DistanceDisFiltering;
+import ncdsearch.clustering.debug.DistanceTopFiltering;
 import ncdsearch.clustering.debug.NoClustering;
 import ncdsearch.clustering.strategy.Average;
 import ncdsearch.clustering.strategy.Clustering;
@@ -113,8 +114,13 @@ public class Clusters {
 				c = new GroupAverage(allNode, distanceAlgorithm, clusterNum, exDistanceThreshold);
 			} else if (clustringStrategy.equals("EXAV")) {
 				c = new Average(allNode, distanceAlgorithm, clusterNum, exDistanceThreshold);
-			} else if (clustringStrategy.equals("EXDF")) {
-				c = new DistanceFiltering(allNode, distanceAlgorithm, clusterNum, exDistanceThreshold, clusterDistance);
+			} else if (clustringStrategy.startsWith("EXDF")) {
+				if (clustringStrategy.startsWith("EXDFT")) {
+					c = new DistanceTopFiltering(allNode, distanceAlgorithm, clusterNum, exDistanceThreshold, clusterDistance);
+				}else {
+					/*EXDFD*/
+					c = new DistanceDisFiltering(allNode, distanceAlgorithm, clusterNum, exDistanceThreshold, clusterDistance);
+				}
 			} else {
 				//				System.err.println("Not Supported Strategy: " + clustringStrategy);
 				System.err.println("ExNo Clustering: ");
