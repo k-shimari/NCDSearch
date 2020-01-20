@@ -107,13 +107,13 @@ public class Evaluate {
 		allTopN = 0;
 		if (isRemoveClustering) {
 			for (JsonNode node : cs.getAllNode()) {
-				if (JsonNodeInfo.getNodeDistance(node) <= distanceThreshold) {
+				if (JsonNodeInfo.getNodeDistance(node) > distanceThreshold) {
 					allTopN++;
 				}
 			}
 		} else {
 			for (JsonNode node : cs.getAllNode()) {
-				if (JsonNodeInfo.getNodeDistance(node) > distanceThreshold) {
+				if (JsonNodeInfo.getNodeDistance(node) <= distanceThreshold) {
 					allTopN++;
 				}
 			}
@@ -268,7 +268,6 @@ public class Evaluate {
 		//fcs.addAllNode(cs.getRepJsonMap().get(sortedNodes.get(0)));
 		List<JsonNode> list = new ArrayList<>(cs.getRepJsonMap().get(sortedNodes.get(0)));
 		fcs.addAllNode(list.subList(0, Math.min(list.size(), clusterTopN)));
-
 	}
 
 	private boolean isContainInAnswer(JsonNode node, List<JsonNode> answerNodes) {
@@ -308,7 +307,7 @@ public class Evaluate {
 	}
 
 	private boolean isContainMaxNode(List<JsonNode> nodes, List<JsonNode> allNode) {
-		for (int i = this.allTopN - 1; i >= 0; i--) {
+		for (int i = allNode.size() - 1; i >= allNode.size() - this.allTopN; i--) {
 			JsonNode maxNode = JsonNodesInfo.getSortedListbyDistance(allNode).get(i);
 			if (nodes.contains(maxNode)) {
 				return true;
