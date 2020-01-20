@@ -54,6 +54,8 @@ public class Main {
 		}
 
 		if (clusteringStrategy.startsWith("EXDF")) {
+			if (isRemoveClustering)
+				clusteringStrategy = "RM" + clusteringStrategy;
 			callDistanceFilteringEvaluate(args[0], isRemoveClustering);
 		} else {
 			callEvaluate(args[0], isRemoveClustering);
@@ -112,7 +114,7 @@ public class Main {
 			Clusters cs = ij.converttoClusters(new File(inputJson));
 			Answers a = ij.converttoAnswer(new File(answerJson), String.valueOf(ID));
 
-			InitJson fij = new InitJson("EXDF", distanceAlgorithm, REPN, CLUSTER_NUM, exDistanceThreshold,
+			InitJson fij = new InitJson(clusteringStrategy, distanceAlgorithm, REPN, CLUSTER_NUM, exDistanceThreshold,
 					clusterDistance);
 			Clusters fcs = fij.converttoClusters(new File(inputJson));
 

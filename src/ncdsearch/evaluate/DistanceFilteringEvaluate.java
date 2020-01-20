@@ -1,10 +1,7 @@
 package ncdsearch.evaluate;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
 import ncdsearch.clustering.Answers;
 import ncdsearch.clustering.Clusters;
-import ncdsearch.clustering.JsonNodeInfo;
 
 public class DistanceFilteringEvaluate extends Evaluate {
 
@@ -13,14 +10,9 @@ public class DistanceFilteringEvaluate extends Evaluate {
 	}
 
 	public void evaluate(Clusters fcs, Clusters cs, Answers a) {
-		if (isDistance) {
-			allTopN=0;
-			for (JsonNode node : cs.getAllNode()) {
-				if(JsonNodeInfo.getNodeDistance(node)<=distanceThreshold) {
-					allTopN++;
-				}
-			}
-		}
+//		if (isDistance) {
+//			setTopN(cs);
+//		}
 		totalCall++;
 		nonAnswerRepSize = 0;
 		totalResultNode += cs.getNodeSize();

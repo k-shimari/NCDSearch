@@ -103,7 +103,7 @@ public class Evaluate {
 		//calcFvalue();
 	}
 
-	private void setTopN(Clusters cs) {
+	protected void setTopN(Clusters cs) {
 		allTopN = 0;
 		if (isRemoveClustering) {
 			for (JsonNode node : cs.getAllNode()) {

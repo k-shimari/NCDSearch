@@ -8,17 +8,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import gnu.trove.map.hash.TIntDoubleHashMap;
 import ncdsearch.clustering.strategy.Cluster;
 import ncdsearch.clustering.strategy.Component;
-import ncdsearch.clustering.strategy.DistanceClustering;
 
-public abstract class DistanceFiltering extends DistanceClustering {
-	protected double clusterDistance;
-
+public abstract class RemoveDistanceFiltering extends DistanceFiltering {
 	protected abstract void addJsonNode(List<Cluster> allClusterList);
 
-	public DistanceFiltering(List<JsonNode> allNode, String strategy, int clusterNum, double exDistanceThreshold,
+	public RemoveDistanceFiltering(List<JsonNode> allNode, String strategy, int clusterNum, double exDistanceThreshold,
 			double clusterDistance) {
-		super(allNode, strategy, clusterNum, exDistanceThreshold);
-		this.clusterDistance = clusterDistance;
+		super(allNode, strategy, clusterNum, exDistanceThreshold, clusterDistance);
 	}
 
 	@Override
@@ -39,6 +35,7 @@ public abstract class DistanceFiltering extends DistanceClustering {
 		return nodeList;
 	}
 
+	@Override
 	protected void addNearElements(List<Cluster> allClusterList) {
 		for (int i = 0; i < totalVertexNumber; i++) {
 			if (removedFlagMap[i])
@@ -57,9 +54,10 @@ public abstract class DistanceFiltering extends DistanceClustering {
 		}
 	}
 
+	@Override
 	protected void pushElements(List<List<JsonNode>> nodeList) {
 		for (int i = 0; i < totalVertexNumber; i++) {
-			if (removedFlagMap[i]) {
+			if (!removedFlagMap[i]) {
 				for (Component co : clusterMap.get(i).getComponents()) {
 					this.allNode.add(co.getJsonNode());
 					List<JsonNode> list = new ArrayList<>();
@@ -68,19 +66,5 @@ public abstract class DistanceFiltering extends DistanceClustering {
 				}
 			}
 		}
-	}
-
-	public List<List<JsonNode>> exClustering() {
-		return clustering();
-	}
-
-	@Override
-	protected void update() {
-
-	}
-
-	@Override
-	protected double calcDistance(Cluster c1, Cluster c2) {
-		return c1.getMinDistance(c2);
 	}
 }

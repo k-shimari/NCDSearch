@@ -10,6 +10,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import ncdsearch.clustering.debug.DistanceDisFiltering;
 import ncdsearch.clustering.debug.DistanceTopFiltering;
 import ncdsearch.clustering.debug.NoClustering;
+import ncdsearch.clustering.debug.RemoveDistanceDisFiltering;
+import ncdsearch.clustering.debug.RemoveDistanceTopFiltering;
 import ncdsearch.clustering.strategy.Average;
 import ncdsearch.clustering.strategy.Clustering;
 import ncdsearch.clustering.strategy.GroupAverage;
@@ -127,7 +129,15 @@ public class Clusters {
 				c = new NoClustering(allNode, distanceAlgorithm, clusterNum);
 			}
 			clusterContents = c.exClustering();
-		} else {
+		}else if (clustringStrategy.startsWith("RM")) {
+			if (clustringStrategy.startsWith("RMEXDFT")) {
+				c = new RemoveDistanceTopFiltering(allNode, distanceAlgorithm, clusterNum, exDistanceThreshold, clusterDistance);
+			}else {
+				/*RMEXDFD*/
+				c = new RemoveDistanceDisFiltering(allNode, distanceAlgorithm, clusterNum, exDistanceThreshold, clusterDistance);
+			}
+			clusterContents = c.clustering();
+		}else {
 			if (clustringStrategy.equals("DIR") || clustringStrategy.equals("FILE")) {
 				c = new PathClustering(allNode, clustringStrategy);
 			} else if (clustringStrategy.equals("SH")) {
