@@ -10,11 +10,9 @@ import ncdsearch.clustering.Answers;
 import ncdsearch.clustering.Clusters;
 import ncdsearch.clustering.JsonNodesInfo;
 
-
-
 public class IdealEvaluate extends Evaluate {
-	public IdealEvaluate(String checkN, int clusterTopN) {
-		super(checkN,clusterTopN);
+	public IdealEvaluate(String checkN, int clusterTopN, boolean isRemoveClustering) {
+		super(checkN, clusterTopN, isRemoveClustering);
 	}
 
 	@Override
@@ -42,7 +40,8 @@ public class IdealEvaluate extends Evaluate {
 		Clusters ics = new Clusters();
 		Set<List<JsonNode>> set = new HashSet<>();
 		for (List<JsonNode> nodes : cs.getRepJsonMap().values()) {
-			if (set.contains(nodes)) continue;
+			if (set.contains(nodes))
+				continue;
 			List<JsonNode> sortedNodes = JsonNodesInfo.getSortedListbyDistance(nodes);
 			if (isContainInAnswer(nodes, a.getAllNode())) {
 				ics.addClusterReps(sortedNodes);
@@ -52,7 +51,7 @@ public class IdealEvaluate extends Evaluate {
 				}
 			} else {
 				nonAnswerRepSize += Math.min(allTopN, nodes.size());
-//				nonAnswerRepSize += Math.min(10, nodes.size());
+				//				nonAnswerRepSize += Math.min(10, nodes.size());
 			}
 			set.add(nodes);
 		}

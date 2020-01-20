@@ -23,6 +23,7 @@ public class Evaluate {
 
 	protected int allTopN;
 	protected double distanceThreshold;
+	protected boolean isRemoveClustering;
 	protected boolean isDistance;
 
 	protected int nonAnswerRepSize = 0;
@@ -35,9 +36,10 @@ public class Evaluate {
 	protected int totalRFind = 0;
 	protected int totalRAll = 0;
 
-	public Evaluate(String checkN, int clusterTopN) {
+	public Evaluate(String checkN, int clusterTopN, boolean isRemoveClustering) {
 		this.allTopN = setAllTopN(checkN);
 		this.clusterTopN = clusterTopN;
+		this.isRemoveClustering = isRemoveClustering;
 	}
 
 	private int setAllTopN(String checkN) {
@@ -57,13 +59,9 @@ public class Evaluate {
 	//	}
 
 	public void evaluate(Clusters cs, Answers a) {
+		/*Distance to TopN*/
 		if (isDistance) {
-			allTopN = 0;
-			for (JsonNode node : cs.getAllNode()) {
-				if (JsonNodeInfo.getNodeDistance(node) <= distanceThreshold) {
-					allTopN++;
-				}
-			}
+			setTopN(cs);
 		}
 		totalCall++;
 		nonAnswerRepSize = 0;
@@ -82,7 +80,12 @@ public class Evaluate {
 		//
 		//		});
 
-		Clusters fcs = getFilteredClusters(cs, a);
+		Clusters fcs;
+		if (isRemoveClustering) {
+			fcs = getRemovedFilteredClusters(cs, a);
+		} else {
+			fcs = getFilteredClusters(cs, a);
+		}
 		fcsNodeSizes.add(fcs.getNodeSize());
 		//printRank(cs, fcs);
 		//		fcs.getRepJsonMap().entrySet().forEach(s -> {
@@ -98,6 +101,23 @@ public class Evaluate {
 		calcPrecision(fcs, a);
 		calcRecall(fcs, a);
 		//calcFvalue();
+	}
+
+	private void setTopN(Clusters cs) {
+		allTopN = 0;
+		if (isRemoveClustering) {
+			for (JsonNode node : cs.getAllNode()) {
+				if (JsonNodeInfo.getNodeDistance(node) <= distanceThreshold) {
+					allTopN++;
+				}
+			}
+		} else {
+			for (JsonNode node : cs.getAllNode()) {
+				if (JsonNodeInfo.getNodeDistance(node) > distanceThreshold) {
+					allTopN++;
+				}
+			}
+		}
 	}
 
 	private void printAnswerRank(Clusters cs, Answers a) {
@@ -210,18 +230,36 @@ public class Evaluate {
 			List<JsonNode> sortedNodes = JsonNodesInfo.getSortedListbyDistance(nodes);
 			if (isContainMinNode(nodes, cs.getAllNode())) {
 				//if (isContainInAnswer(nodes, a.getAllNode())) {
-					fcs.addClusterReps(sortedNodes);
+				fcs.addClusterReps(sortedNodes);
 
-					addNode(cs, fcs, sortedNodes);
+				addNode(cs, fcs, sortedNodes);
 
-					for (JsonNode node : sortedNodes) {
-						fcs.putRepJsonMap(node, cs.getRepJsonMap().get(node));
-					}
+				for (JsonNode node : sortedNodes) {
+					fcs.putRepJsonMap(node, cs.getRepJsonMap().get(node));
+				}
 				//} else {
 				//	nonAnswerRepSize += sortedNodes.size();
 				//}
 			}
 			//printRank(cs, nodes);
+		}
+		return fcs;
+	}
+
+	public Clusters getRemovedFilteredClusters(Clusters cs, Answers a) {
+		Clusters fcs = new Clusters();
+		for (List<JsonNode> nodes : cs.getClusterReps()) {
+			List<JsonNode> sortedNodes = JsonNodesInfo.getSortedListbyDistance(nodes);
+			if (!isContainMaxNode(nodes, cs.getAllNode())) {
+				//if (isContainInAnswer(nodes, a.getAllNode())) {
+				fcs.addClusterReps(sortedNodes);
+
+				addNode(cs, fcs, sortedNodes);
+
+				for (JsonNode node : sortedNodes) {
+					fcs.putRepJsonMap(node, cs.getRepJsonMap().get(node));
+				}
+			}
 		}
 		return fcs;
 	}
@@ -263,6 +301,16 @@ public class Evaluate {
 		for (int i = 0; i < this.allTopN; i++) {
 			JsonNode minNode = JsonNodesInfo.getSortedListbyDistance(allNode).get(i);
 			if (nodes.contains(minNode)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean isContainMaxNode(List<JsonNode> nodes, List<JsonNode> allNode) {
+		for (int i = this.allTopN - 1; i >= 0; i--) {
+			JsonNode maxNode = JsonNodesInfo.getSortedListbyDistance(allNode).get(i);
+			if (nodes.contains(maxNode)) {
 				return true;
 			}
 		}

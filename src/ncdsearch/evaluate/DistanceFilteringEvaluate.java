@@ -8,8 +8,8 @@ import ncdsearch.clustering.JsonNodeInfo;
 
 public class DistanceFilteringEvaluate extends Evaluate {
 
-	public DistanceFilteringEvaluate(String checkN, int clusterTopN) {
-		super(checkN, clusterTopN);
+	public DistanceFilteringEvaluate(String checkN, int clusterTopN, boolean isRemoveClustering) {
+		super(checkN, clusterTopN, isRemoveClustering);
 	}
 
 	public void evaluate(Clusters fcs, Clusters cs, Answers a) {

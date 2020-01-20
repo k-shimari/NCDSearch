@@ -45,29 +45,37 @@ public class Main {
 		if (args.length > 4) {
 			clusterDistance = Double.parseDouble(args[4]);
 		}
-		if(clusteringStrategy.equals("EXDF")) {
-			callDistanceFilteringEvaluate(args[0]);
-		}else {
-			callEvaluate(args[0]);
+		boolean isRemoveClustering;
+		if (clusteringStrategy.startsWith("RM")) {
+			isRemoveClustering = true;
+			clusteringStrategy = clusteringStrategy.substring(2);
+		} else {
+			isRemoveClustering = false;
+		}
+
+		if (clusteringStrategy.startsWith("EXDF")) {
+			callDistanceFilteringEvaluate(args[0], isRemoveClustering);
+		} else {
+			callEvaluate(args[0], isRemoveClustering);
 		}
 		//callIdealEvaluate(args[0]);
 	}
 
-	private static void callEvaluate(String path) {
-		Evaluate e = new Evaluate(checkN, CLUSTERTOPN);
+	private static void callEvaluate(String path, boolean isRemoveClustering) {
+		Evaluate e = new Evaluate(checkN, CLUSTERTOPN, isRemoveClustering);
 		evaluate(path, e);
 		//e.printAverage();
 		printLogs(e);
 	}
 
-	private static void callIdealEvaluate(String path) {
-		IdealEvaluate e = new IdealEvaluate(checkN, CLUSTERTOPN);
+	private static void callIdealEvaluate(String path, boolean isRemoveClustering) {
+		IdealEvaluate e = new IdealEvaluate(checkN, CLUSTERTOPN, isRemoveClustering);
 		evaluate(path, e);
 		printLogs(e);
 	}
 
-	private static void callDistanceFilteringEvaluate(String path) {
-		DistanceFilteringEvaluate e = new DistanceFilteringEvaluate(checkN, CLUSTERTOPN);
+	private static void callDistanceFilteringEvaluate(String path, boolean isRemoveClustering) {
+		DistanceFilteringEvaluate e = new DistanceFilteringEvaluate(checkN, CLUSTERTOPN, isRemoveClustering);
 		evaluate(path, e);
 		printLogs(e);
 	}
@@ -141,10 +149,9 @@ public class Main {
 		System.out.println("------------------");
 		System.out.println("Total:");
 		e.printAll();
-//		System.err.println(distanceAlgorithm + ", " + clusteringStrategy + ", Dis" + exDistanceThreshold + ", " + clusterDistance);
+		//		System.err.println(distanceAlgorithm + ", " + clusteringStrategy + ", Dis" + exDistanceThreshold + ", " + clusterDistance);
 		System.err.println(distanceAlgorithm + ", " + clusteringStrategy + ", " + checkN + ", " + exDistanceThreshold
-		+ ", " + clusterDistance
-		);
+				+ ", " + clusterDistance);
 		System.err.println("------------------");
 		e.printAverage();
 	}
