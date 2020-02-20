@@ -13,13 +13,7 @@ public class DistanceFilteringEvaluate extends Evaluate {
 //		if (isDistance) {
 //			setTopN(cs);
 //		}
-		totalCall++;
-		nonAnswerRepSize = 0;
-		totalResultNode += cs.getNodeSize();
-		totalAnswerNode += a.getAllNodeSize();
-		System.out.println("TotalNode: " + cs.getNodeSize());
-		System.out.println("TotalDir: " + cs.getClusterRepsSize());
-		System.out.println("-------");
+		pushToTotal(cs, a);
 
 		fcsNodeSizes.add(fcs.getNodeSize());
 		System.out.println("Filtered Node: " + fcs.getNodeSize());

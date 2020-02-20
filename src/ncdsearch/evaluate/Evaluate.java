@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import ncdsearch.clustering.Answers;
 import ncdsearch.clustering.Clusters;
 import ncdsearch.clustering.JsonNodeInfo;
-import ncdsearch.clustering.JsonNodesInfo;
 
 public class Evaluate {
 	protected List<Double> reduceWorks = new ArrayList<Double>();
@@ -54,15 +53,39 @@ public class Evaluate {
 		}
 	}
 
-	//	public void setAllTopN(int allTopN) {
-	//		this.checkN = allTopN;
-	//	}
 
 	public void evaluate(Clusters cs, Answers a) {
 		/*Distance to TopN*/
 		if (isDistance) {
 			setTopN(cs);
 		}
+		pushToTotal(cs, a);
+		Clusters fcs;
+		Filtering f = new Filtering(allTopN, clusterTopN, isRemoveClustering);
+		if (isRemoveClustering) {
+			fcs = f.getRemovedFilteredClusters(cs, a);
+		} else {
+			fcs = f.getFilteredClusters(cs, a);
+		}
+		fcsNodeSizes.add(fcs.getNodeSize());
+
+		System.out.println("Filtered Node: " + fcs.getNodeSize());
+		System.out.println("Filtered Dir: " + fcs.getClusterRepsSize());
+
+		printResult(cs, a, fcs);
+	}
+
+	private void printResult(Clusters cs, Answers a, Clusters fcs) {
+//		PrintRank p =new PrintRank();
+//		p.printAnswerRank(cs, a);
+//		p.printNodeRank(cs, fcs);
+		calcReduceWork(cs, fcs);
+		calcPrecision(fcs, a);
+		calcRecall(fcs, a);
+		//calcFvalue();
+	}
+
+	protected void pushToTotal(Clusters cs, Answers a) {
 		totalCall++;
 		nonAnswerRepSize = 0;
 		totalResultNode += cs.getNodeSize();
@@ -70,37 +93,6 @@ public class Evaluate {
 		System.out.println("TotalNode: " + cs.getNodeSize());
 		System.out.println("TotalDir: " + cs.getClusterRepsSize());
 		System.out.println("-------");
-		//printAnswerRank(cs, a);
-
-		//		cs.getRepJsonMap().keySet().forEach(s -> {
-		//
-		//			System.out.println("rep:" + s);
-		//
-		//			//s.getValue().forEach(t -> System.out.println(t));
-		//
-		//		});
-
-		Clusters fcs;
-		if (isRemoveClustering) {
-			fcs = getRemovedFilteredClusters(cs, a);
-		} else {
-			fcs = getFilteredClusters(cs, a);
-		}
-		fcsNodeSizes.add(fcs.getNodeSize());
-		//printRank(cs, fcs);
-		//		fcs.getRepJsonMap().entrySet().forEach(s -> {
-		//
-		//			System.out.println("rep:" + s);
-		//			s.getValue().forEach(t -> System.out.println(t));
-		//
-		//		});
-		System.out.println("Filtered Node: " + fcs.getNodeSize());
-		System.out.println("Filtered Dir: " + fcs.getClusterRepsSize());
-
-		calcReduceWork(cs, fcs);
-		calcPrecision(fcs, a);
-		calcRecall(fcs, a);
-		//calcFvalue();
 	}
 
 	protected void setTopN(Clusters cs) {
@@ -120,39 +112,9 @@ public class Evaluate {
 		}
 	}
 
-	private void printAnswerRank(Clusters cs, Answers a) {
-		List<JsonNode> sortedList = JsonNodesInfo.getSortedListbyDistance(cs.getAllNode());
-		for (int i = 0; i < sortedList.size(); i++) {
-			if (isContainInAnswer(sortedList.get(i), a.getAllNode())) {
-				System.out.println("Answer Rank: " + (i + 1));
-			}
-		}
-	}
 
-	private void printRank(Clusters cs, Clusters fcs) {
-		System.out.println("----");
-		List<JsonNode> sortedList = JsonNodesInfo.getSortedListbyDistance(cs.getAllNode());
-		for (JsonNode node : fcs.getAllNode()) {
-			for (int i = 0; i < sortedList.size(); i++) {
-				if (node.equals(sortedList.get(i))) {
-					System.out.println("Rank: " + (i + 1));
-				}
-			}
-		}
-	}
 
-	private void printRank(Clusters cs, List<JsonNode> nodeList) {
-		System.out.println("----");
-		List<JsonNode> sortedList = JsonNodesInfo.getSortedListbyDistance(cs.getAllNode());
-		for (JsonNode node : nodeList) {
-			for (int i = 0; i < sortedList.size(); i++) {
-				if (node.equals(sortedList.get(i))) {
-					System.out.println("Rank: " + (i + 1));
-					break;
-				}
-			}
-		}
-	}
+
 
 	public void printAll() {
 		System.out.println("--------------");
@@ -224,109 +186,7 @@ public class Evaluate {
 		//				+ (double) totalAnswerNode / totalResultNode);
 	}
 
-	public Clusters getFilteredClusters(Clusters cs, Answers a) {
-		Clusters fcs = new Clusters();
-		for (List<JsonNode> nodes : cs.getClusterReps()) {
-			List<JsonNode> sortedNodes = JsonNodesInfo.getSortedListbyDistance(nodes);
-			if (isContainMinNode(nodes, cs.getAllNode())) {
-				//if (isContainInAnswer(nodes, a.getAllNode())) {
-				fcs.addClusterReps(sortedNodes);
 
-				addNode(cs, fcs, sortedNodes);
-
-				for (JsonNode node : sortedNodes) {
-					fcs.putRepJsonMap(node, cs.getRepJsonMap().get(node));
-				}
-				//} else {
-				//	nonAnswerRepSize += sortedNodes.size();
-				//}
-			}
-			//printRank(cs, nodes);
-		}
-		return fcs;
-	}
-
-	public Clusters getRemovedFilteredClusters(Clusters cs, Answers a) {
-		Clusters fcs = new Clusters();
-		for (List<JsonNode> nodes : cs.getClusterReps()) {
-			List<JsonNode> sortedNodes = JsonNodesInfo.getSortedListbyDistance(nodes);
-			if (!isContainMaxNode(nodes, cs.getAllNode())) {
-				//if (isContainInAnswer(nodes, a.getAllNode())) {
-				fcs.addClusterReps(sortedNodes);
-
-				addNode(cs, fcs, sortedNodes);
-
-				for (JsonNode node : sortedNodes) {
-					fcs.putRepJsonMap(node, cs.getRepJsonMap().get(node));
-				}
-			}
-		}
-		return fcs;
-	}
-
-	protected void addNode(Clusters cs, Clusters fcs, List<JsonNode> sortedNodes) {
-		//fcs.addAllNode(cs.getRepJsonMap().get(sortedNodes.get(0)));
-		List<JsonNode> list = new ArrayList<>(cs.getRepJsonMap().get(sortedNodes.get(0)));
-		fcs.addAllNode(list.subList(0, Math.min(list.size(), clusterTopN)));
-	}
-
-	private boolean isContainInAnswer(JsonNode node, List<JsonNode> answerNodes) {
-		for (JsonNode aNode : answerNodes) {
-			if (JsonNodeInfo.getNodeFile(node).equals(JsonNodeInfo.getNodeAnswerFile(aNode))) {
-				if (JsonNodeInfo.getNodeEndLine(node) >= JsonNodeInfo.getNodeSLine(aNode) &&
-						JsonNodeInfo.getNodeStartLine(node) <= JsonNodeInfo.getNodeELine(aNode)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	protected boolean isContainInAnswer(List<JsonNode> nodes, List<JsonNode> answerNodes) {
-		for (JsonNode aNode : answerNodes) {
-			for (JsonNode node : nodes) {
-				if (JsonNodeInfo.getNodeFile(node).equals(JsonNodeInfo.getNodeAnswerFile(aNode))) {
-					if (JsonNodeInfo.getNodeEndLine(node) >= JsonNodeInfo.getNodeSLine(aNode) &&
-							JsonNodeInfo.getNodeStartLine(node) <= JsonNodeInfo.getNodeELine(aNode)) {
-						return true;
-					}
-				}
-			}
-		}
-		return false;
-	}
-
-	private boolean isContainMinNode(List<JsonNode> nodes, List<JsonNode> allNode) {
-		for (int i = 0; i < this.allTopN; i++) {
-			JsonNode minNode = JsonNodesInfo.getSortedListbyDistance(allNode).get(i);
-			if (nodes.contains(minNode)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private boolean isContainMaxNode(List<JsonNode> nodes, List<JsonNode> allNode) {
-		for (int i = allNode.size() - 1; i >= allNode.size() - this.allTopN; i--) {
-			JsonNode maxNode = JsonNodesInfo.getSortedListbyDistance(allNode).get(i);
-			if (nodes.contains(maxNode)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private boolean isContainInResult(JsonNode node, List<JsonNode> resultNodes) {
-		for (JsonNode rNode : resultNodes) {
-			if (JsonNodeInfo.getNodeFile(rNode).equals(JsonNodeInfo.getNodeAnswerFile(node))) {
-				if (JsonNodeInfo.getNodeEndLine(rNode) >= JsonNodeInfo.getNodeSLine(node) &&
-						JsonNodeInfo.getNodeStartLine(rNode) <= JsonNodeInfo.getNodeELine(node)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
 
 	public void calcReduceWork(Clusters cs, Clusters fcs) {
 		System.out.println(cs.getNodeSize() + "+" + fcs.getNodeSize() + "+" + nonAnswerRepSize);
@@ -336,11 +196,12 @@ public class Evaluate {
 		System.out.println("Reduction rate: " + reduceWork);
 	}
 
+
 	//TODO fix at denominator
 	public void calcPrecision(Clusters fcs, Answers a) {
 		int size = 0;
 		for (JsonNode node : fcs.getAllNode()) {
-			if (isContainInAnswer(node, a.getAllNode())) {
+			if (CompareNodes.isContainInAnswer(node, a.getAllNode())) {
 				size++;
 			}
 		}
@@ -361,7 +222,7 @@ public class Evaluate {
 	public void calcRecall(Clusters fcs, Answers a) {
 		int size = 0;
 		for (JsonNode aNode : a.getAllNode()) {
-			if (isContainInResult(aNode, fcs.getAllNode())) {
+			if (CompareNodes.isContainInResult(aNode, fcs.getAllNode())) {
 				size++;
 			}
 		}
