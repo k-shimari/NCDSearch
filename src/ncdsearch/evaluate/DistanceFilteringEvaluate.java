@@ -15,7 +15,7 @@ public class DistanceFilteringEvaluate extends Evaluate {
 //		}
 		pushToTotal(cs, a);
 
-		fcsNodeSizes.add(fcs.getNodeSize());
+		data.fcsNodeSizes.add(fcs.getNodeSize());
 		System.out.println("Filtered Node: " + fcs.getNodeSize());
 		System.out.println("Filtered Dir: " + fcs.getClusterRepsSize());
 

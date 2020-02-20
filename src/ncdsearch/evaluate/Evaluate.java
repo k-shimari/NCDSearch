@@ -1,9 +1,5 @@
 package ncdsearch.evaluate;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import com.fasterxml.jackson.databind.JsonNode;
 
 import ncdsearch.clustering.Answers;
@@ -11,29 +7,14 @@ import ncdsearch.clustering.Clusters;
 import ncdsearch.clustering.JsonNodeInfo;
 
 public class Evaluate {
-	protected List<Double> reduceWorks = new ArrayList<Double>();
-	protected List<Double> precisions = new ArrayList<Double>();
-	protected List<Double> recalls = new ArrayList<Double>();
-	protected List<Double> fvalues = new ArrayList<Double>();
-	protected List<Integer> fcsNodeSizes = new ArrayList<Integer>();
-	protected int totalCall = 0;
-	protected int totalNan = 0;
-	protected int clusterTopN;
 
+	protected int clusterTopN;
 	protected int allTopN;
 	protected double distanceThreshold;
 	protected boolean isRemoveClustering;
 	protected boolean isDistance;
-
 	protected int nonAnswerRepSize = 0;
-
-	protected int totalResultNode = 0;
-	protected int totalFilteredNode = 0;
-	protected int totalAnswerNode = 0;
-	protected int totalPFind = 0;
-	protected int totalPAll = 0;
-	protected int totalRFind = 0;
-	protected int totalRAll = 0;
+	protected EvaluateData data = new EvaluateData();
 
 	public Evaluate(String checkN, int clusterTopN, boolean isRemoveClustering) {
 		this.allTopN = setAllTopN(checkN);
@@ -67,7 +48,7 @@ public class Evaluate {
 		} else {
 			fcs = f.getFilteredClusters(cs, a);
 		}
-		fcsNodeSizes.add(fcs.getNodeSize());
+		data.fcsNodeSizes.add(fcs.getNodeSize());
 
 		System.out.println("Filtered Node: " + fcs.getNodeSize());
 		System.out.println("Filtered Dir: " + fcs.getClusterRepsSize());
@@ -86,10 +67,10 @@ public class Evaluate {
 	}
 
 	protected void pushToTotal(Clusters cs, Answers a) {
-		totalCall++;
+		data.totalCall++;
 		nonAnswerRepSize = 0;
-		totalResultNode += cs.getNodeSize();
-		totalAnswerNode += a.getAllNodeSize();
+		data.totalResultNode += cs.getNodeSize();
+		data.totalAnswerNode += a.getAllNodeSize();
 		System.out.println("TotalNode: " + cs.getNodeSize());
 		System.out.println("TotalDir: " + cs.getClusterRepsSize());
 		System.out.println("-------");
@@ -112,87 +93,11 @@ public class Evaluate {
 		}
 	}
 
-
-
-
-
-	public void printAll() {
-		System.out.println("--------------");
-		System.out.println("Reduce Works");
-		Collections.sort(reduceWorks);
-		reduceWorks.forEach(s -> System.out.println(s));
-
-		System.out.println("--------------");
-		System.out.println("Precision");
-		Collections.sort(precisions);
-		precisions.forEach(s -> System.out.println(s));
-
-		System.out.println("--------------");
-		System.out.println("Recall");
-		Collections.sort(recalls);
-		recalls.forEach(s -> System.out.println(s));
-
-		System.out.println("--------------");
-		System.out.println("Filtered Node Size");
-		fcsNodeSizes.forEach(s -> System.out.println(s));
-
-		//		System.out.println("--------------");
-		//		System.out.println("F-Value");
-		//		Collections.sort(fvalues);
-		//		fvalues.forEach(s -> System.out.println(s));
-
-	}
-
-	public void printAverage() {
-		double sum = 0.0;
-		for (double d : reduceWorks) {
-			sum += d;
-		}
-		//System.err.println("Ave Reduction rate: " + sum / totalCall);
-		System.err.println(sum / totalCall);
-		sum = 0.0;
-		for (double d : precisions) {
-			sum += d;
-		}
-		//System.err.println("Ave Precision: " + sum / (totalCall - totalNan));
-		System.err.println(sum / (totalCall - totalNan));
-		sum = 0.0;
-		for (double d : recalls) {
-			sum += d;
-		}
-		//System.err.println("Ave Recall: " + sum / totalCall);
-		System.err.println(sum / totalCall);
-		//		sum = 0.0;
-		//		for (double d : fvalues) {
-		//			sum += d;
-		//		}
-		//		System.out.println("Ave Fvalue: " + sum / totalCall);
-		double precision = (double) totalPFind / totalPAll;
-		double recall = (double) totalRFind / totalRAll;
-		double reduction = 1.0 - (double) totalFilteredNode / totalResultNode;
-		//		System.err.println("Total Reduction rate: " + reduction);
-		//		System.err.println("Total Precision: " + precision);
-		//		System.err.println("Total Recall: " + recall);
-		//		System.err.println("Total F-value: " + 2 * precision * recall / (precision + recall));
-		//		System.err.println("TotalCheckedNode: " + totalFilteredNode);
-		//		System.err.println("TotalAnswerNode/TotalResultNode:" + totalAnswerNode + "/" + totalResultNode + ": "
-		//				+ (double) totalAnswerNode / totalResultNode);
-		System.err.println(reduction);
-		System.err.println(precision);
-		System.err.println(recall);
-		System.err.println(2 * precision * recall / (precision + recall));
-		System.err.println(totalFilteredNode);
-		//		System.err.println(totalAnswerNode + "/" + totalResultNode + ": "
-		//				+ (double) totalAnswerNode / totalResultNode);
-	}
-
-
-
 	public void calcReduceWork(Clusters cs, Clusters fcs) {
 		System.out.println(cs.getNodeSize() + "+" + fcs.getNodeSize() + "+" + nonAnswerRepSize);
-		totalFilteredNode += fcs.getNodeSize() + nonAnswerRepSize;
+		data.totalFilteredNode += fcs.getNodeSize() + nonAnswerRepSize;
 		double reduceWork = (double) (cs.getNodeSize() - fcs.getNodeSize() - nonAnswerRepSize) / cs.getNodeSize();
-		reduceWorks.add(reduceWork);
+		data.reduceWorks.add(reduceWork);
 		System.out.println("Reduction rate: " + reduceWork);
 	}
 
@@ -208,13 +113,13 @@ public class Evaluate {
 		System.out.println(size + "/" + fcs.getNodeSize());
 		//System.out.println("Precision: " + (double) size);
 		double precision = (double) size / fcs.getNodeSize();
-		totalPFind += size;
-		totalPAll += fcs.getNodeSize();
+		data.totalPFind += size;
+		data.totalPAll += fcs.getNodeSize();
 		if (fcs.getNodeSize() != 0) {
-			precisions.add(precision);
+			data.precisions.add(precision);
 			System.out.println("Precision: " + precision);
 		} else {
-			totalNan++;
+			data.totalNan++;
 			System.out.println("Precision: NAN");
 		}
 	}
@@ -227,10 +132,10 @@ public class Evaluate {
 			}
 		}
 		System.out.println(size + "/" + a.getAllNodeSize());
-		totalRFind += size;
-		totalRAll += a.getAllNodeSize();
+		data.totalRFind += size;
+		data.totalRAll += a.getAllNodeSize();
 		double recall = (double) size / a.getAllNodeSize();
-		recalls.add(recall);
+		data.recalls.add(recall);
 		System.out.println("Recall: " + recall);
 	}
 
@@ -242,5 +147,9 @@ public class Evaluate {
 	//		System.out.println("Fvalue: " + fvalue);
 	//
 	//	}
+
+	public EvaluateData getData() {
+		return data;
+	}
 
 }
