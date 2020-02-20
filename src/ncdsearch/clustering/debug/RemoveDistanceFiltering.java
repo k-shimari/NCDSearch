@@ -37,23 +37,26 @@ public abstract class RemoveDistanceFiltering extends DistanceFiltering {
 
 	@Override
 	protected void addNearElements(List<Cluster> allClusterList) {
+		boolean[] tmpRemovedFlagMap = new boolean[totalVertexNumber];
 		for (int i = 0; i < totalVertexNumber; i++) {
-			if (removedFlagMap[i])
+			if (!removedFlagMap[i])
 				continue;
 			TIntDoubleHashMap innerMap = distanceMap.get(i);
 			for (int j = 0; j < totalVertexNumber; j++) {
-				if (i != j) {
+				if (i != j && !removedFlagMap[j]) {
 					double distance = innerMap.get(j);
 					//need additional param
 					if (distance <= clusterDistance) {
 						allClusterList.add(clusterMap.get(i));
-						removedFlagMap[j] = true;
+						tmpRemovedFlagMap[j] = true;
 					}
 				}
 			}
 		}
+		for (int i = 0; i < totalVertexNumber; i++) {
+			removedFlagMap[i] |= tmpRemovedFlagMap[i];
+		}
 	}
-
 	@Override
 	protected void pushElements(List<List<JsonNode>> nodeList) {
 		for (int i = 0; i < totalVertexNumber; i++) {

@@ -44,6 +44,7 @@ public class Main {
 		}
 		if (args.length > 4) {
 			clusterDistance = Double.parseDouble(args[4]);
+
 		}
 		boolean isRemoveClustering;
 		if (clusteringStrategy.startsWith("RM")) {
