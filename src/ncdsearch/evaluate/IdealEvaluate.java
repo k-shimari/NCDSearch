@@ -23,9 +23,7 @@ public class IdealEvaluate extends Evaluate {
 		System.out.println("Filtered Node: " + ics.getNodeSize());
 		System.out.println("Filtered Dir: " + ics.getClusterRepsSize());
 
-		calcReduceWork(cs, ics);
-		calcPrecision(ics, a);
-		calcRecall(ics, a);
+		printResult(cs, a, ics);
 		//calcFvalue();
 
 	}

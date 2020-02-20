@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
+import ncdsearch.clustering.Answers;
+import ncdsearch.clustering.Clusters;
+
 public class EvaluateData {
 	public List<Double> reduceWorks = new ArrayList<>();
 	public List<Double> precisions = new ArrayList<>();
@@ -90,6 +95,60 @@ public class EvaluateData {
 		//				+ (double) totalAnswerNode / totalResultNode);
 	}
 
+	public void calcReduceWork(Clusters cs, Clusters fcs, int nonAnswerRepSize) {
+		System.out.println(cs.getNodeSize() + "+" + fcs.getNodeSize() + "+" + nonAnswerRepSize);
+		totalFilteredNode += fcs.getNodeSize() + nonAnswerRepSize;
+		double reduceWork = (double) (cs.getNodeSize() - fcs.getNodeSize() - nonAnswerRepSize) / cs.getNodeSize();
+		reduceWorks.add(reduceWork);
+		System.out.println("Reduction rate: " + reduceWork);
+	}
+
+
+	//TODO fix at denominator
+	public void calcPrecision(Clusters fcs, Answers a) {
+		int size = 0;
+		for (JsonNode node : fcs.getAllNode()) {
+			if (CompareNodes.isContainInAnswer(node, a.getAllNode())) {
+				size++;
+			}
+		}
+		System.out.println(size + "/" + fcs.getNodeSize());
+		//System.out.println("Precision: " + (double) size);
+		double precision = (double) size / fcs.getNodeSize();
+		totalPFind += size;
+		totalPAll += fcs.getNodeSize();
+		if (fcs.getNodeSize() != 0) {
+			precisions.add(precision);
+			System.out.println("Precision: " + precision);
+		} else {
+			totalNan++;
+			System.out.println("Precision: NAN");
+		}
+	}
+
+	public void calcRecall(Clusters fcs, Answers a) {
+		int size = 0;
+		for (JsonNode aNode : a.getAllNode()) {
+			if (CompareNodes.isContainInResult(aNode, fcs.getAllNode())) {
+				size++;
+			}
+		}
+		System.out.println(size + "/" + a.getAllNodeSize());
+		totalRFind += size;
+		totalRAll += a.getAllNodeSize();
+		double recall = (double) size / a.getAllNodeSize();
+		recalls.add(recall);
+		System.out.println("Recall: " + recall);
+	}
+
+	//	private void calcFvalue() {
+	//		double precision = precisions.get(totalCall - 1);
+	//		double recall = recalls.get(totalCall - 1);
+	//		double fvalue = 2 * precision * recall / (precision + recall);
+	//		fvalues.add(fvalue);
+	//		System.out.println("Fvalue: " + fvalue);
+	//
+	//	}
 
 
 }

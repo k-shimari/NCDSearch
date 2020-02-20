@@ -34,7 +34,6 @@ public class Evaluate {
 		}
 	}
 
-
 	public void evaluate(Clusters cs, Answers a) {
 		/*Distance to TopN*/
 		if (isDistance) {
@@ -56,13 +55,13 @@ public class Evaluate {
 		printResult(cs, a, fcs);
 	}
 
-	private void printResult(Clusters cs, Answers a, Clusters fcs) {
-//		PrintRank p =new PrintRank();
-//		p.printAnswerRank(cs, a);
-//		p.printNodeRank(cs, fcs);
-		calcReduceWork(cs, fcs);
-		calcPrecision(fcs, a);
-		calcRecall(fcs, a);
+	protected void printResult(Clusters cs, Answers a, Clusters fcs) {
+		//		PrintRank p =new PrintRank();
+		//		p.printAnswerRank(cs, a);
+		//		p.printNodeRank(cs, fcs);
+		data.calcReduceWork(cs, fcs, nonAnswerRepSize);
+		data.calcPrecision(fcs, a);
+		data.calcRecall(fcs, a);
 		//calcFvalue();
 	}
 
@@ -92,61 +91,6 @@ public class Evaluate {
 			}
 		}
 	}
-
-	public void calcReduceWork(Clusters cs, Clusters fcs) {
-		System.out.println(cs.getNodeSize() + "+" + fcs.getNodeSize() + "+" + nonAnswerRepSize);
-		data.totalFilteredNode += fcs.getNodeSize() + nonAnswerRepSize;
-		double reduceWork = (double) (cs.getNodeSize() - fcs.getNodeSize() - nonAnswerRepSize) / cs.getNodeSize();
-		data.reduceWorks.add(reduceWork);
-		System.out.println("Reduction rate: " + reduceWork);
-	}
-
-
-	//TODO fix at denominator
-	public void calcPrecision(Clusters fcs, Answers a) {
-		int size = 0;
-		for (JsonNode node : fcs.getAllNode()) {
-			if (CompareNodes.isContainInAnswer(node, a.getAllNode())) {
-				size++;
-			}
-		}
-		System.out.println(size + "/" + fcs.getNodeSize());
-		//System.out.println("Precision: " + (double) size);
-		double precision = (double) size / fcs.getNodeSize();
-		data.totalPFind += size;
-		data.totalPAll += fcs.getNodeSize();
-		if (fcs.getNodeSize() != 0) {
-			data.precisions.add(precision);
-			System.out.println("Precision: " + precision);
-		} else {
-			data.totalNan++;
-			System.out.println("Precision: NAN");
-		}
-	}
-
-	public void calcRecall(Clusters fcs, Answers a) {
-		int size = 0;
-		for (JsonNode aNode : a.getAllNode()) {
-			if (CompareNodes.isContainInResult(aNode, fcs.getAllNode())) {
-				size++;
-			}
-		}
-		System.out.println(size + "/" + a.getAllNodeSize());
-		data.totalRFind += size;
-		data.totalRAll += a.getAllNodeSize();
-		double recall = (double) size / a.getAllNodeSize();
-		data.recalls.add(recall);
-		System.out.println("Recall: " + recall);
-	}
-
-	//	private void calcFvalue() {
-	//		double precision = precisions.get(totalCall - 1);
-	//		double recall = recalls.get(totalCall - 1);
-	//		double fvalue = 2 * precision * recall / (precision + recall);
-	//		fvalues.add(fvalue);
-	//		System.out.println("Fvalue: " + fvalue);
-	//
-	//	}
 
 	public EvaluateData getData() {
 		return data;

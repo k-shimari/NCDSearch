@@ -19,8 +19,6 @@ public class DistanceFilteringEvaluate extends Evaluate {
 		System.out.println("Filtered Node: " + fcs.getNodeSize());
 		System.out.println("Filtered Dir: " + fcs.getClusterRepsSize());
 
-		calcReduceWork(cs, fcs);
-		calcPrecision(fcs, a);
-		calcRecall(fcs, a);
+		printResult(cs, a, fcs);
 	}
 }
