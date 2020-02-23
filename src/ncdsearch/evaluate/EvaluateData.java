@@ -141,14 +141,13 @@ public class EvaluateData {
 		System.out.println("Recall: " + recall);
 	}
 
-	//	private void calcFvalue() {
-	//		double precision = precisions.get(totalCall - 1);
-	//		double recall = recalls.get(totalCall - 1);
-	//		double fvalue = 2 * precision * recall / (precision + recall);
-	//		fvalues.add(fvalue);
-	//		System.out.println("Fvalue: " + fvalue);
-	//
-	//	}
+	public void calcFvalue() {
+		double precision = precisions.get(totalCall - 1);
+		double recall = recalls.get(totalCall - 1);
+		double fvalue = 2 * precision * recall / (precision + recall);
+		fvalues.add(fvalue);
+		System.out.println("Fvalue: " + fvalue);
+	}
 
 
 }

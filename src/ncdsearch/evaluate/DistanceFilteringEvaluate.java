@@ -9,16 +9,17 @@ public class DistanceFilteringEvaluate extends Evaluate {
 		super(checkN, clusterTopN, isRemoveClustering);
 	}
 
+
 	public void evaluate(Clusters fcs, Clusters cs, Answers a) {
 //		if (isDistance) {
 //			setTopN(cs);
 //		}
-		pushToTotal(cs, a);
 
-		data.fcsNodeSizes.add(fcs.getNodeSize());
+
 		System.out.println("Filtered Node: " + fcs.getNodeSize());
 		System.out.println("Filtered Dir: " + fcs.getClusterRepsSize());
 
+		pushToTotal(cs, a, fcs );
 		printResult(cs, a, fcs);
 	}
 }

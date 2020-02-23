@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import ncdsearch.clustering.Answers;
 import ncdsearch.clustering.Clusters;
 import ncdsearch.clustering.JsonNodeInfo;
+import ncdsearch.evaluate.output.OutputResult;
 
 public class Evaluate {
 
@@ -34,25 +35,26 @@ public class Evaluate {
 		}
 	}
 
-	public void evaluate(Clusters cs, Answers a) {
+	public void evaluate(Clusters cs, Answers a, String path) {
 		/*Distance to TopN*/
 		if (isDistance) {
 			setTopN(cs);
 		}
-		pushToTotal(cs, a);
-		Clusters fcs;
+
 		Filtering f = new Filtering(allTopN, clusterTopN, isRemoveClustering);
+		Clusters fcs;
 		if (isRemoveClustering) {
 			fcs = f.getRemovedFilteredClusters(cs, a);
 		} else {
 			fcs = f.getFilteredClusters(cs, a);
 		}
-		data.fcsNodeSizes.add(fcs.getNodeSize());
-
 		System.out.println("Filtered Node: " + fcs.getNodeSize());
 		System.out.println("Filtered Dir: " + fcs.getClusterRepsSize());
 
+		pushToTotal(cs, a, fcs);
 		printResult(cs, a, fcs);
+		OutputResult outres = new OutputResult(cs, a, fcs);
+		outres.print();
 	}
 
 	protected void printResult(Clusters cs, Answers a, Clusters fcs) {
@@ -62,14 +64,15 @@ public class Evaluate {
 		data.calcReduceWork(cs, fcs, nonAnswerRepSize);
 		data.calcPrecision(fcs, a);
 		data.calcRecall(fcs, a);
-		//calcFvalue();
+		//data.calcFvalue();
 	}
 
-	protected void pushToTotal(Clusters cs, Answers a) {
+	protected void pushToTotal(Clusters cs, Answers a, Clusters fcs) {
 		data.totalCall++;
 		nonAnswerRepSize = 0;
 		data.totalResultNode += cs.getNodeSize();
 		data.totalAnswerNode += a.getAllNodeSize();
+		data.fcsNodeSizes.add(fcs.getNodeSize());
 		System.out.println("TotalNode: " + cs.getNodeSize());
 		System.out.println("TotalDir: " + cs.getClusterRepsSize());
 		System.out.println("-------");

@@ -16,16 +16,12 @@ public class IdealEvaluate extends Evaluate {
 	}
 
 	@Override
-	public void evaluate(Clusters cs, Answers a) {
-		pushToTotal(cs, a);
-
+	public void evaluate(Clusters cs, Answers a, String path) {
 		Clusters ics = getIdealClusters(cs, a);
 		System.out.println("Filtered Node: " + ics.getNodeSize());
 		System.out.println("Filtered Dir: " + ics.getClusterRepsSize());
-
+		pushToTotal(cs, a, ics);
 		printResult(cs, a, ics);
-		//calcFvalue();
-
 	}
 
 	public Clusters getIdealClusters(Clusters cs, Answers a) {

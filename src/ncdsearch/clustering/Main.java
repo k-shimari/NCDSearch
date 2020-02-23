@@ -84,12 +84,12 @@ public class Main {
 	}
 
 	private static void evaluate(String path, Evaluate e) {
-		for (int ID = 1; ID <= 20; ID++) {
+		for (int ID = 1; ID <= 53; ID++) {
 			System.out.println("------------------");
 			System.out.println("ID:" + ID);
 			String answerJson = Paths.get(path, ("queries.json")).toAbsolutePath().toString();
 			String jsonPath = distanceAlgorithm.equals("ncd") ? "zip" : distanceAlgorithm;
-			String inputJson = Paths.get(path, ("result/"+jsonPath +"-0.5-fast-k0-" + ID + ".json")).toAbsolutePath()
+			String inputJson = Paths.get(path, ("result/" + jsonPath + "-0.5-fast-k0-" + ID + ".json")).toAbsolutePath()
 					//String inputJson = Paths.get(path, ("result/lzjd-0.5-fast-k0-" + ID + ".json")).toAbsolutePath()
 					.toString();
 			InitJson ij = new InitJson(clusteringStrategy, distanceAlgorithm, REPN, CLUSTER_NUM, exDistanceThreshold,
@@ -100,7 +100,7 @@ public class Main {
 			//output(cs);
 			//e.setTopN(topNList[ID - 1]);
 			//if(cs.getNodeSize()>10)
-			e.evaluate(cs, a);
+			e.evaluate(cs, a, path);
 		}
 	}
 
@@ -110,7 +110,7 @@ public class Main {
 			System.out.println("ID:" + ID);
 			String answerJson = Paths.get(path, ("queries.json")).toAbsolutePath().toString();
 			String jsonPath = distanceAlgorithm.equals("ncd") ? "zip" : distanceAlgorithm;
-			String inputJson = Paths.get(path, ("result/"+jsonPath +"-0.5-fast-k0-" + ID + ".json")).toAbsolutePath()
+			String inputJson = Paths.get(path, ("result/" + jsonPath + "-0.5-fast-k0-" + ID + ".json")).toAbsolutePath()
 					//String inputJson = Paths.get(path, ("result/lzjd-0.5-fast-k0-" + ID + ".json")).toAbsolutePath()
 					.toString();
 			InitJson ij = new InitJson("NO", distanceAlgorithm, REPN, CLUSTER_NUM, 0, 0);
@@ -134,14 +134,14 @@ public class Main {
 			System.out.println("ID:" + ID);
 			String answerJson = Paths.get(path, ("queries.json")).toAbsolutePath().toString();
 			String jsonPath = distanceAlgorithm.equals("ncd") ? "zip" : distanceAlgorithm;
-			String inputJson = Paths.get(path, ("result/"+jsonPath +"-0.5-fast-k0-" + ID + ".json")).toAbsolutePath()
+			String inputJson = Paths.get(path, ("result/" + jsonPath + "-0.5-fast-k0-" + ID + ".json")).toAbsolutePath()
 					.toString();
 			InitJson ij = new InitJson(clusteringStrategy, distanceAlgorithm, REPN, CLUSTER_NUM, exDistanceThreshold,
 					clusterDistance);
 			Clusters cs = ij.converttoClusters(new File(inputJson));
 			Answers a = ij.converttoAnswer(new File(answerJson), String.valueOf(ID));
 
-			e.evaluate(cs, a);
+			e.evaluate(cs, a, path);
 		}
 	}
 
@@ -154,7 +154,8 @@ public class Main {
 	private static void printLogs(Evaluate e) {
 		System.out.println("------------------");
 		System.out.println("Total:");
-		e.getData().printAll();;
+		e.getData().printAll();
+		;
 		//		System.err.println(distanceAlgorithm + ", " + clusteringStrategy + ", Dis" + exDistanceThreshold + ", " + clusterDistance);
 		System.err.println(distanceAlgorithm + ", " + clusteringStrategy + ", " + checkN + ", " + exDistanceThreshold
 				+ ", " + clusterDistance);
