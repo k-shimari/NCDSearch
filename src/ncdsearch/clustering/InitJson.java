@@ -34,14 +34,6 @@ public class InitJson {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			JsonNode root = mapper.readTree(file);
-
-			//			List<JsonNode> nodes = new ArrayList<JsonNode>();
-			//			for (JsonNode node : root.get(KEY_RESULT)) {
-			//				nodes.add(node);
-			//			}
-			//			List<JsonNode> sortedNode = JsonNodesInfo.getSortedListbyDistance(nodes);
-			//			sortedNode.stream().limit(10).forEach(s -> cs.addNode(s));
-
 			for (JsonNode node : root.get(KEY_RESULT)) {
 				cs.addNode(node);
 			}

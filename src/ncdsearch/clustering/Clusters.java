@@ -1,6 +1,7 @@
 package ncdsearch.clustering;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,8 @@ public class Clusters {
 	private double exDistanceThreshold;
 	private double clusterDistance;
 
-	public Clusters(String strategy, String distanceAlgorithm, int topN, int clusterNum, double exDistanceThreshold, double clusterDistance) {
+	public Clusters(String strategy, String distanceAlgorithm, int topN, int clusterNum, double exDistanceThreshold,
+			double clusterDistance) {
 		this.clustringStrategy = strategy;
 		this.distanceAlgorithm = distanceAlgorithm;
 		this.topN = topN;
@@ -42,7 +44,6 @@ public class Clusters {
 		this.clusterNum = clusterNum;
 		this.clusterDistance = clusterDistance;
 	}
-
 
 	public Clusters() {
 	}
@@ -103,6 +104,9 @@ public class Clusters {
 				repJsonMap.put(node, nodes);
 			}
 		}
+		Collections.sort(clusterReps,
+				(p1, p2) -> Double.compare(p1.get(0).get("Distance").asDouble(), p2.get(0).get("Distance").asDouble()));
+
 	}
 
 	public void clustering() {
@@ -118,10 +122,12 @@ public class Clusters {
 				c = new Average(allNode, distanceAlgorithm, clusterNum, exDistanceThreshold);
 			} else if (clustringStrategy.startsWith("EXDF")) {
 				if (clustringStrategy.startsWith("EXDFT")) {
-					c = new DistanceTopFiltering(allNode, distanceAlgorithm, clusterNum, exDistanceThreshold, clusterDistance);
-				}else {
+					c = new DistanceTopFiltering(allNode, distanceAlgorithm, clusterNum, exDistanceThreshold,
+							clusterDistance);
+				} else {
 					/*EXDFD*/
-					c = new DistanceDisFiltering(allNode, distanceAlgorithm, clusterNum, exDistanceThreshold, clusterDistance);
+					c = new DistanceDisFiltering(allNode, distanceAlgorithm, clusterNum, exDistanceThreshold,
+							clusterDistance);
 				}
 			} else {
 				//				System.err.println("Not Supported Strategy: " + clustringStrategy);
@@ -129,15 +135,17 @@ public class Clusters {
 				c = new NoClustering(allNode, distanceAlgorithm, clusterNum);
 			}
 			clusterContents = c.exClustering();
-		}else if (clustringStrategy.startsWith("RM")) {
+		} else if (clustringStrategy.startsWith("RM")) {
 			if (clustringStrategy.startsWith("RMEXDFT")) {
-				c = new RemoveDistanceTopFiltering(allNode, distanceAlgorithm, clusterNum, exDistanceThreshold, clusterDistance);
-			}else {
+				c = new RemoveDistanceTopFiltering(allNode, distanceAlgorithm, clusterNum, exDistanceThreshold,
+						clusterDistance);
+			} else {
 				/*RMEXDFD*/
-				c = new RemoveDistanceDisFiltering(allNode, distanceAlgorithm, clusterNum, exDistanceThreshold, clusterDistance);
+				c = new RemoveDistanceDisFiltering(allNode, distanceAlgorithm, clusterNum, exDistanceThreshold,
+						clusterDistance);
 			}
 			clusterContents = c.clustering();
-		}else {
+		} else {
 			if (clustringStrategy.equals("DIR") || clustringStrategy.equals("FILE")) {
 				c = new PathClustering(allNode, clustringStrategy);
 			} else if (clustringStrategy.equals("SH")) {
@@ -151,8 +159,8 @@ public class Clusters {
 			} else if (clustringStrategy.equals("NF")) {
 				c = new NewmanFast(allNode, distanceAlgorithm);
 			} else {
-//				System.err.println("Not Supported Strategy: " + clustringStrategy);
-//				System.err.println("No Clustering: ");
+				//				System.err.println("Not Supported Strategy: " + clustringStrategy);
+				//				System.err.println("No Clustering: ");
 				c = new NoClustering(allNode, distanceAlgorithm, clusterNum);
 			}
 			clusterContents = c.clustering();

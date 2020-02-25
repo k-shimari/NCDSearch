@@ -79,7 +79,7 @@ public class Main {
 
 	private static void filtering(String path, Filtering f) {
 		String jsonPath = distanceAlgorithm.equals("ncd") ? "zip" : distanceAlgorithm;
-		String inputJson = Paths.get(path, ("result/" + jsonPath + "-0.5-fast-k0-15.json")).toAbsolutePath()
+		String inputJson = Paths.get(path, ("result/" + jsonPath + "-0.5-fast-k0-29.json")).toAbsolutePath()
 				//String inputJson = Paths.get(path, ("result/lzjd-0.5-fast-k0-" + ID + ".json")).toAbsolutePath()
 				.toString();
 		InitJson ij = new InitJson(clusteringStrategy, distanceAlgorithm, REPN, CLUSTER_NUM, exDistanceThreshold,

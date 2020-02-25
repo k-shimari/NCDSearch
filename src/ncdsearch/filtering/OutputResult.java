@@ -35,56 +35,7 @@ public class OutputResult {
 	}
 
 	public void print() {
-
-		/* クラスタID（順序関係あり，昇順）
-		 * クラスタ内でのランク
-		 * 総合ランク
-		 * filteredか否か
-		 * を追加
-		 * */
-
-
-
-
-
-
-		int index[] = new int[1];
-		index[0] = 1;
-
-
-		for (List<JsonNode> list : clusters.getClusterReps()) {
-			clusters.getRepJsonMap().get(list.get(0)).forEach(node -> {
-				((ObjectNode) node).put("ClusterID", index[0]);
-				if (filteredClusters.getAllNode().contains(node)) {
-					((ObjectNode) node).put("ShouldCheck", "true");
-				} else {
-					((ObjectNode) node).put("ShouldCheck", "false");
-				}
-			});
-			index[0]++;
-		}
-
-
-
-
-
-
-
-
-
-
-		for (List<JsonNode> list : clusters.getClusterReps()) {
-			clusters.getRepJsonMap().get(list.get(0)).forEach(node -> {
-				((ObjectNode) node).put("clusterID", index[0]);
-				if (filteredClusters.getAllNode().contains(node)) {
-					((ObjectNode) node).put("shouldCheck", "true");
-				} else {
-					((ObjectNode) node).put("shouldCheck", "false");
-				}
-			});
-			index[0]++;
-		}
-		System.out.println("a");
+		addElementToJson();
 		ResultJson rj = new ResultJson(clusters.getAllNode());
 		try {
 			ObjectMapper mapper = new ObjectMapper();
@@ -96,13 +47,34 @@ public class OutputResult {
 			}
 			Files.createFile(path);
 			Files.write(path, lines, Charset.forName("UTF-8"), StandardOpenOption.WRITE);
-
-			//
 		} catch (Exception e) {
-			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
 		}
 
+	}
+
+	/*@TODO jsonのTotalでのRankのアルゴリズムを考える
+	 *
+	 * */
+	private void addElementToJson() {
+		int clusterID = 1;
+		int rankTotal = 1;
+		for (List<JsonNode> list : clusters.getClusterReps()) {
+			int rankInCluster = 1;
+			for (JsonNode node : clusters.getRepJsonMap().get(list.get(0))) {
+				((ObjectNode) node).put("clusterID", clusterID);
+				if (filteredClusters.getAllNode().contains(node)) {
+					((ObjectNode) node).put("shouldCheck", "true");
+				} else {
+					((ObjectNode) node).put("shouldCheck", "false");
+				}
+				((ObjectNode) node).put("RankInCluster", rankInCluster);
+				((ObjectNode) node).put("RankTotal", rankTotal);
+				rankInCluster++;
+				rankTotal++;
+			}
+			clusterID++;
+		}
 	}
 
 	public class ResultJson {
