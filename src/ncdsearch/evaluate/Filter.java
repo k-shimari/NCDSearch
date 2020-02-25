@@ -5,24 +5,23 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import ncdsearch.clustering.Answers;
 import ncdsearch.clustering.Clusters;
 import ncdsearch.clustering.JsonNodeInfo;
 import ncdsearch.clustering.JsonNodesInfo;
 
-public class Filtering {
+public class Filter {
 	protected int allTopN;
 	protected double distanceThreshold;
 	protected boolean isRemoveClustering;
 	protected int clusterTopN;
-	public Filtering(int allTopN, int clusterTopN, boolean isRemoveClustering) {
+	public Filter(int allTopN, int clusterTopN, boolean isRemoveClustering) {
 		this.allTopN = allTopN;
 		this.clusterTopN = clusterTopN;
 		this.isRemoveClustering = isRemoveClustering;
 	}
 
 
-	public Clusters getFilteredClusters(Clusters cs, Answers a) {
+	public Clusters getFilteredClusters(Clusters cs) {
 		Clusters fcs = new Clusters();
 		for (List<JsonNode> nodes : cs.getClusterReps()) {
 			List<JsonNode> sortedNodes = JsonNodesInfo.getSortedListbyDistance(nodes);
@@ -45,7 +44,7 @@ public class Filtering {
 		return fcs;
 	}
 
-	public Clusters getRemovedFilteredClusters(Clusters cs, Answers a) {
+	public Clusters getRemovedFilteredClusters(Clusters cs) {
 		Clusters fcs = new Clusters();
 		for (List<JsonNode> nodes : cs.getClusterReps()) {
 			List<JsonNode> sortedNodes = JsonNodesInfo.getSortedListbyDistance(nodes);
@@ -99,7 +98,4 @@ public class Filtering {
 		}
 		return false;
 	}
-
-
-
 }

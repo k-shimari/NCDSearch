@@ -3,10 +3,11 @@ package ncdsearch.clustering;
 import java.io.File;
 import java.nio.file.Paths;
 
-import ncdsearch.clustering.debug.OutputClusters;
 import ncdsearch.evaluate.DistanceFilteringEvaluate;
 import ncdsearch.evaluate.Evaluate;
 import ncdsearch.evaluate.IdealEvaluate;
+import ncdsearch.filtering.Filtering;
+import ncdsearch.filtering.OutputResult;
 
 public class Main {
 	private static String clusteringStrategy = "EXSH";
@@ -20,12 +21,8 @@ public class Main {
 	private static final int CLUSTERTOPN = 10000;
 	//	private static String distanceAlgorithm = "DIR";
 	//	private static final int TOPN = 1100;
+	/*when manually decided*/
 	private static final int CLUSTER_NUM = 5;
-	//	private static int[] topNList = { 1, 43, 11, 4, 13, 16, 14, 11, 30, 8, 6, 43, 10, 10, 10, 5, 37, 12, 17, 52, 2, 4,
-	//			11, 11, 5, 13, 52, 12, 538, 112, 86, 13, 2, 4, 14, 156, 32, 2, 11, 12, 240, 11, 10, 10, 13, 13, 3, 21, 6, 5,
-	//			10, 4, 33 };//TOP10
-	//	private static int[] topNList = { 1, 22, 6, 4, 7, 16, 6, 10, 19, 5, 6, 43, 5, 7, 5, 5, 37, 7, 17, 52, 2, 4, 5, 8, 5,
-	//			7, 16, 5, 538, 112, 86, 6, 2, 4, 7, 156, 5, 2, 5, 12, 226, 7, 5, 5, 13, 5, 3, 21, 5, 5, 5, 4, 15 };//TOP5
 
 	public static void main(String[] args) {
 		//		try {
@@ -58,10 +55,39 @@ public class Main {
 			if (isRemoveClustering)
 				clusteringStrategy = "RM" + clusteringStrategy;
 			callDistanceFilteringEvaluate(args[0], isRemoveClustering);
+			//	distanceStart(args[0], isRemoveClustering);
 		} else {
-			callEvaluate(args[0], isRemoveClustering);
+			//	callEvaluate(args[0], isRemoveClustering);
+			start(args[0], isRemoveClustering);
 		}
 		//callIdealEvaluate(args[0]);
+	}
+
+	private static void start(String path, boolean isRemoveClustering) {
+		Filtering f = new Filtering(checkN, CLUSTERTOPN, isRemoveClustering);
+		filtering(path, f);
+		//e.printAverage();
+		//	printLogs(f);
+	}
+
+	//	private static void distanceStart(String path, boolean isRemoveClustering) {
+	//		Evaluate e = new Evaluate(checkN, CLUSTERTOPN, isRemoveClustering);
+	//		evaluate(path, e);
+	//		//e.printAverage();
+	//		printLogs(e);
+	//	}
+
+	private static void filtering(String path, Filtering f) {
+		String jsonPath = distanceAlgorithm.equals("ncd") ? "zip" : distanceAlgorithm;
+		String inputJson = Paths.get(path, ("result/" + jsonPath + "-0.5-fast-k0-15.json")).toAbsolutePath()
+				//String inputJson = Paths.get(path, ("result/lzjd-0.5-fast-k0-" + ID + ".json")).toAbsolutePath()
+				.toString();
+		InitJson ij = new InitJson(clusteringStrategy, distanceAlgorithm, REPN, CLUSTER_NUM, exDistanceThreshold,
+				clusterDistance);
+		Clusters cs = ij.converttoClusters(new File(inputJson));
+		Clusters fcs = f.getFilteredClusters(cs);
+		OutputResult outres = new OutputResult(cs, fcs, path);
+		outres.print();
 	}
 
 	private static void callEvaluate(String path, boolean isRemoveClustering) {
@@ -145,12 +171,12 @@ public class Main {
 		}
 	}
 
-	private static void output(Clusters cs) {
-		OutputClusters o = new OutputClusters(cs);
-		//o.output();
-		o.outputSorted();
-	}
-
+	//	private static void output(Clusters cs) {
+	//		OutputClusters o = new OutputClusters(cs);
+	//		//o.output();
+	//		o.outputSorted();
+	//	}
+	//
 	private static void printLogs(Evaluate e) {
 		System.out.println("------------------");
 		System.out.println("Total:");

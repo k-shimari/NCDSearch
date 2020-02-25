@@ -6,6 +6,8 @@ import java.io.IOException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+
+/*Json to List<JsonNode>*/
 public class InitJson {
 	private static final String KEY_RESULT = "Result";
 	private static final String KEY_ANSWERS = "answers";

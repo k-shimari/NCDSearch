@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import ncdsearch.clustering.Answers;
 import ncdsearch.clustering.Clusters;
 import ncdsearch.clustering.JsonNodeInfo;
-import ncdsearch.evaluate.output.OutputResult;
 
 public class Evaluate {
 
@@ -41,20 +40,18 @@ public class Evaluate {
 			setTopN(cs);
 		}
 
-		Filtering f = new Filtering(allTopN, clusterTopN, isRemoveClustering);
+		Filter f = new Filter(allTopN, clusterTopN, isRemoveClustering);
 		Clusters fcs;
 		if (isRemoveClustering) {
-			fcs = f.getRemovedFilteredClusters(cs, a);
+			fcs = f.getRemovedFilteredClusters(cs);
 		} else {
-			fcs = f.getFilteredClusters(cs, a);
+			fcs = f.getFilteredClusters(cs);
 		}
 		System.out.println("Filtered Node: " + fcs.getNodeSize());
 		System.out.println("Filtered Dir: " + fcs.getClusterRepsSize());
 
 		pushToTotal(cs, a, fcs);
 		printResult(cs, a, fcs);
-		OutputResult outres = new OutputResult(cs, a, fcs);
-		outres.print();
 	}
 
 	protected void printResult(Clusters cs, Answers a, Clusters fcs) {
