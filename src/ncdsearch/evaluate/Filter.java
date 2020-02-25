@@ -6,7 +6,6 @@ import java.util.List;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import ncdsearch.clustering.Clusters;
-import ncdsearch.clustering.JsonNodeInfo;
 import ncdsearch.clustering.JsonNodesInfo;
 
 public class Filter {
@@ -14,12 +13,12 @@ public class Filter {
 	protected double distanceThreshold;
 	protected boolean isRemoveClustering;
 	protected int clusterTopN;
+
 	public Filter(int allTopN, int clusterTopN, boolean isRemoveClustering) {
 		this.allTopN = allTopN;
 		this.clusterTopN = clusterTopN;
 		this.isRemoveClustering = isRemoveClustering;
 	}
-
 
 	public Clusters getFilteredClusters(Clusters cs) {
 		Clusters fcs = new Clusters();
@@ -68,16 +67,14 @@ public class Filter {
 		fcs.addAllNode(list.subList(0, Math.min(list.size(), clusterTopN)));
 	}
 
-
-
-	private boolean isContainLongNode(List<JsonNode> nodes, List<JsonNode> allNode) {
-		for (JsonNode node : nodes) {
-			if (JsonNodeInfo.getNodeDistance(node) > distanceThreshold) {
-				return true;
-			}
-		}
-		return false;
-	}
+//	private boolean isContainLongNode(List<JsonNode> nodes, List<JsonNode> allNode) {
+//		for (JsonNode node : nodes) {
+//			if (JsonNodeInfo.getNodeDistance(node) > distanceThreshold) {
+//				return true;
+//			}
+//		}
+//		return false;
+//	}
 
 	private boolean isContainMinNode(List<JsonNode> nodes, List<JsonNode> allNode) {
 		for (int i = 0; i < this.allTopN; i++) {

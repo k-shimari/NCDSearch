@@ -48,10 +48,31 @@ public class OutputResult {
 
 
 
-
-
 		int index[] = new int[1];
 		index[0] = 1;
+
+
+		for (List<JsonNode> list : clusters.getClusterReps()) {
+			clusters.getRepJsonMap().get(list.get(0)).forEach(node -> {
+				((ObjectNode) node).put("ClusterID", index[0]);
+				if (filteredClusters.getAllNode().contains(node)) {
+					((ObjectNode) node).put("ShouldCheck", "true");
+				} else {
+					((ObjectNode) node).put("ShouldCheck", "false");
+				}
+			});
+			index[0]++;
+		}
+
+
+
+
+
+
+
+
+
+
 		for (List<JsonNode> list : clusters.getClusterReps()) {
 			clusters.getRepJsonMap().get(list.get(0)).forEach(node -> {
 				((ObjectNode) node).put("clusterID", index[0]);

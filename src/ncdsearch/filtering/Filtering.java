@@ -53,9 +53,7 @@ public class Filtering {
 		if (isDistance) {
 			setTopN(cs);
 		}
-
 		Filter f = new Filter(allTopN, clusterTopN, isRemoveClustering);
-		Clusters fcs;
 		if (isRemoveClustering) {
 			return f.getRemovedFilteredClusters(cs);
 		} else {
