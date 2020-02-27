@@ -10,10 +10,11 @@ import ncdsearch.filtering.Filtering;
 import ncdsearch.filtering.OutputResult;
 
 public class Main {
-	private static String clusteringStrategy = "EXSH";
+	private static String clusteringStrategy = "EXGA";
 	private static String distanceAlgorithm = "ncd";
-	private static String checkN = "Top1";
-	private static double exDistanceThreshold = 0.3;
+	private static String checkN = "Dis0.1";
+	private static double exDistanceThreshold = 0.35;
+	/*optional*/
 	private static double clusterDistance = 0;
 
 	//Optional Param
@@ -78,10 +79,15 @@ public class Main {
 	//	}
 
 	private static void filtering(String path, Filtering f) {
-		String jsonPath = distanceAlgorithm.equals("ncd") ? "zip" : distanceAlgorithm;
-		String inputJson = Paths.get(path, ("result/" + jsonPath + "-0.5-fast-k0-29.json")).toAbsolutePath()
-				//String inputJson = Paths.get(path, ("result/lzjd-0.5-fast-k0-" + ID + ".json")).toAbsolutePath()
-				.toString();
+		String inputJson;
+		if (path.endsWith(".json")) {
+			inputJson = path;
+		} else {
+			/*評価実験用*/
+			String jsonPath = distanceAlgorithm.equals("ncd") ? "zip" : distanceAlgorithm;
+			inputJson = Paths.get(path, ("result/" + jsonPath + "-0.5-fast-k0-29.json")).toAbsolutePath().toString();
+		}
+
 		InitJson ij = new InitJson(clusteringStrategy, distanceAlgorithm, REPN, CLUSTER_NUM, exDistanceThreshold,
 				clusterDistance);
 		Clusters cs = ij.converttoClusters(new File(inputJson));
