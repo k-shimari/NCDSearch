@@ -1,0 +1,13 @@
+java -jar ncdsearch-clustering.jar /path/to/json (Top$N  | Dis$N) $distance $strategy
+
+/path/to/json　NCDSearchが出力するjsonへのpath
+
+(Top$N  | Dis$N): クラスタリング後のクラスタで，検索上位N件を含むクラスタ（Top$N）or距離一定以下を含むクラスタ（Dis$N）のみにフィルタリングする
+
+$Distance：クラスタリングの終了条件として各クラスタ間の距離の最小値が$Distanceを超えていれば終了
+
+$strategy: クラスタリング手法：最短距離法，最長距離法，重み付き群平均法，単純平均法がある（EXSH，EXLO，EXGA（WPGMA），EXAV（UPGMA））
+
+
+出力は/path/to/jsonと同じ階層に，入力ファイル名の接頭辞に"filtering-"が付いて出てくる
+
